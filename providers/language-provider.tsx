@@ -1,20 +1,46 @@
 'use client'
 
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { type Language, type TranslationKey, getTranslation } from '@/content/translations'
+import { IntlProvider, useIntl } from 'react-intl'
+import { type Language, type TranslationKey, translations } from '@/content/translations'
 
 const LANGUAGE_STORAGE_KEY = 'young-solver-language'
 
 type LanguageContextValue = {
   language: Language
   setLanguage: (nextLanguage: Language) => void
-  t: (key: TranslationKey) => string
 }
 
 const LanguageContext = createContext<LanguageContextValue | null>(null)
 
 function isLanguage(value: string | null): value is Language {
   return value === 'fr' || value === 'en'
+}
+
+function createMessages(language: Language) {
+  return Object.fromEntries(
+    Object.entries(translations).map(([key, value]) => [key, value[language]]),
+  )
+}
+
+function LanguageContextProvider({
+  language,
+  setLanguage,
+  children,
+}: {
+  language: Language
+  setLanguage: (nextLanguage: Language) => void
+  children: React.ReactNode
+}) {
+  const value = useMemo<LanguageContextValue>(
+    () => ({
+      language,
+      setLanguage,
+    }),
+    [language],
+  )
+
+  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>
 }
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
@@ -33,24 +59,27 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem(LANGUAGE_STORAGE_KEY, nextLanguage)
   }
 
-  const value = useMemo<LanguageContextValue>(
-    () => ({
-      language,
-      setLanguage,
-      t: (key) => getTranslation(language, key),
-    }),
-    [language],
-  )
+  const messages = useMemo(() => createMessages(language), [language])
 
-  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>
+  return (
+    <IntlProvider locale={language} messages={messages}>
+      <LanguageContextProvider language={language} setLanguage={setLanguage}>
+        {children}
+      </LanguageContextProvider>
+    </IntlProvider>
+  )
 }
 
 export function useLanguage() {
   const context = useContext(LanguageContext)
+  const intl = useIntl()
 
   if (!context) {
     throw new Error('useLanguage must be used within a LanguageProvider')
   }
 
-  return context
+  return {
+    ...context,
+    t: (key: TranslationKey) => intl.formatMessage({ id: key, defaultMessage: translations[key][context.language] }),
+  }
 }

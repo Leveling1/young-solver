@@ -1,27 +1,115 @@
 # Young Solver
 
-Site vitrine premium construit avec Next.js pour presenter Young Solver, ses services, ses projets, et son positionnement produit.
+Site vitrine premium de Young Solver, construit avec Next.js, pense pour presenter les services, les solutions, les projets clients et la vision produit de l'equipe.
 
-## Objectif du projet
+## 1. Vision du projet
 
-Le site sert a :
+Ce projet n'est pas un simple portfolio statique. Il a ete pense comme une vitrine de positionnement :
 
-- presenter l'offre de Young Solver avec un rendu moderne
-- inspirer confiance avec une execution propre et rapide
-- convertir via la section contact
-- poser une base maintenable pour des iterations futures
+- montrer une image technique solide
+- transmettre une sensation de produit haut de gamme
+- presenter clairement l'offre
+- mettre en avant les solutions internes et les projets clients
+- favoriser la prise de contact
 
-## Stack technique
+Le site combine une direction visuelle moderne, des animations controlees, un theming multi-mode, une base SEO propre, et une architecture suffisamment claire pour evoluer sans repartir de zero.
+
+## 2. Stack utilisee
+
+### Framework et runtime
 
 - Next.js 16
 - React 19
 - TypeScript
+
+### Styling et UI
+
 - Tailwind CSS 4
-- Framer Motion
-- React Three Fiber / Three.js
+- CSS variables pour le theming
+- Framer Motion pour les animations
+
+### 3D et hero visuals
+
+- React Three Fiber
+- Three.js
+
+### Theming
+
 - next-themes
 
-## Commandes utiles
+### Internationalisation
+
+- react-intl
+
+### Utilitaires
+
+- clsx
+- tailwind-merge
+- class-variance-authority
+
+## 3. Fonctionnalites principales
+
+### Hero immersif
+
+Le hero contient :
+
+- une scene animee en arriere-plan
+- une carte de code qui represente la stack de Young Solver
+- des CTA de navigation interne
+
+### Theming
+
+Le site gere plusieurs themes :
+
+- light
+- night
+- black
+- cyberpunk
+
+Les logos et certaines ambiances visuelles s'adaptent automatiquement au theme actif.
+
+### Internationalisation
+
+Le changement de langue est gere proprement via `react-intl`, avec une couche provider locale pour exposer :
+
+- la langue courante
+- le changement de langue
+- une API simple pour recuperer les messages
+
+### Sections metier
+
+Le site contient actuellement :
+
+- hero
+- services
+- section ecosysteme/orchestration
+- solutions / produits
+- projets clients
+- a propos
+- contact
+
+### Branding
+
+Le site utilise :
+
+- un favicon dedie
+- des logos noirs / blancs selon le theme
+- des assets projets generes pour les cartes
+
+### SEO
+
+Le projet integre deja :
+
+- metadata Next.js
+- canonical
+- Open Graph
+- Twitter cards
+- robots
+- sitemap
+- manifest
+- JSON-LD
+
+## 4. Commandes utiles
 
 ```bash
 pnpm install
@@ -31,12 +119,13 @@ pnpm start
 pnpm exec tsc --noEmit
 ```
 
-## Architecture
+## 5. Architecture du projet
 
 ```text
 app/
   layout.tsx
   page.tsx
+  globals.css
   manifest.ts
   robots.ts
   sitemap.ts
@@ -60,186 +149,190 @@ providers/
 
 lib/
   utils.ts
+
+public/
+  images/
 ```
 
-## Structure des responsabilites
+## 6. Role de chaque dossier
 
 ### `app/`
 
-Contient le shell Next.js :
+Contient le shell applicatif Next.js :
 
+- layout global
 - metadata globale
-- viewport
+- styles globaux
 - manifest
 - robots
 - sitemap
-- styles globaux
 
 ### `components/home/`
 
-Contient le domaine principal de la page d'accueil :
+Contient tout ce qui est specifique a la page d'accueil :
 
 - sections marketing
-- visuels 3D
-- hero
+- carte de code
+- visuels 3D / hero
 - composition de page
 
 ### `components/layout/`
 
-Contient les blocs de structure reutilisables :
+Contient les composants structurels globaux :
 
 - header
 - footer
 
 ### `components/controls/`
 
-Contient les commandes utilisateur globales :
+Contient les controleurs globaux :
 
-- switch de theme
-- switch de langue
+- selecteur de langue
+- selecteur de theme
 
 ### `components/ui/`
 
-Contient les primitives partagees :
+Contient les primitives reutilisables :
 
 - boutons
-- cartes glass
 - liens de scroll
-- logo de marque
-- inputs
+- logo
+- cartes glass
+- champs de formulaire
+
+### `components/seo/`
+
+Contient les blocs SEO reutilisables, comme le structured data.
 
 ### `content/`
 
-Centralise les donnees editables :
+Contient les donnees editables du site :
 
-- textes de navigation
-- contenus bilingues
+- textes bilingues
 - listes de services
+- solutions
 - projets
-- reseaux sociaux
+- partenaires
+- infos de contact
 
 ### `providers/`
 
-Contient les contextes applicatifs :
+Contient les providers applicatifs :
 
-- langue
-- theme
+- theme provider
+- language provider base sur `react-intl`
 
-## Fonctionnalites principales
+## 7. Theming
 
-### Themes
+Le theming est pilote par :
 
-Le site gere plusieurs themes :
+- `next-themes`
+- les variables CSS dans `app/globals.css`
 
-- light
-- night
-- black
-- cyberpunk
+Cela permet :
 
-Les logos noir/blanc sont selectionnes automatiquement selon le theme actif.
+- d'adapter les couleurs globales
+- d'ajuster les glass effects
+- de gerer les logos noir/blanc selon le theme
+- de garder une base visuelle centrale et maintenable
 
-### Navigation sans rechargement
+## 8. Internationalisation
 
-La navigation interne utilise un composant de scroll dedie pour :
+L'internationalisation repose sur :
 
-- eviter les rechargements ressentis
-- garder le hash synchronise
-- scroller proprement vers les sections
+- `react-intl`
+- `content/translations.ts`
+- `providers/language-provider.tsx`
 
-### Performance
+Le provider prepare les messages a partir des traductions et expose une API simple au reste de l'interface.
 
-Optimisations deja en place :
+## 9. Animation et motion
 
-- chargement differe de la scene 3D du hero
-- `dynamic import` pour la partie 3D
-- reduction du `dpr` du canvas
-- suppression du preload 3D inutile
-- assets de marque branches proprement
-- validation TypeScript sans erreur
+Les animations sont concentrees sur des zones a forte valeur :
 
-### SEO
+- hero
+- sections reveal au scroll
+- ecosysteme relie par cartes et lignes
+- bandeau partenaires
+- carte code sensible a la souris
 
-Le socle SEO natif Next.js est en place :
+Le principe general du projet est simple :
 
-- metadata riche
+- animation utile
+- animation lisible
+- animation qui soutient le produit au lieu de distraire
+
+## 10. SEO et performance
+
+### SEO deja en place
+
+- titles et descriptions
 - canonical
 - Open Graph
-- Twitter cards
+- Twitter metadata
 - robots
 - sitemap
-- manifest
-- JSON-LD `Organization` et `WebSite`
+- structured data
 
-## Strategie SEO recommandee
+### Performance deja en place
 
-Pour aller tres loin en SEO, voici la feuille de route conseillee :
+- chargement differe de certains visuels
+- build statique
+- theming natif base CSS
+- navigation interne sans rechargement
+- images structurees dans `public/`
 
-### Niveau 1 : fondation technique
+## 11. Modifier le contenu
 
-- garder un HTML semantique propre
-- maintenir un `h1` clair et unique
-- soigner les titles et descriptions
-- garder des pages ultra rapides
-- eviter le JS inutile au-dessus de la ligne de flottaison
+### Modifier un texte
 
-### Niveau 2 : contenu
+Aller dans :
 
-- creer des pages dediees par service
-- creer des pages dediees par secteur ou cas d'usage
-- publier des etudes de cas reelles
-- ajouter une page contact tres claire
-- ajouter des FAQ par service
+- `content/translations.ts`
 
-### Niveau 3 : autorite
+### Modifier les services, solutions ou projets
 
-- connecter le site a Google Search Console
-- connecter le site a Google Business Profile si pertinent
-- obtenir des backlinks qualitatifs
-- publier du contenu regulier cible sur des intentions precises
+Aller dans :
 
-### Niveau 4 : conversion + mesure
+- `content/site.ts`
 
-- suivre les clics sur contact
-- mesurer les pages qui convertissent
-- retravailler les sections faibles selon les donnees
+### Modifier une section
 
-## Guide d'ajout de contenu
+Aller dans :
 
-### Ajouter un service
+- `components/home/sections/`
 
-1. Ajouter le contenu dans `content/site.ts`
-2. Ajouter les labels dans `content/translations.ts`
-3. Verifier l'affichage dans `components/home/sections/services-section.tsx`
+### Modifier le hero
 
-### Ajouter un projet
+Aller dans :
 
-1. Ajouter l'entree dans `content/site.ts`
-2. Ajouter le titre et la description dans `content/translations.ts`
-3. Verifier le rendu dans `components/home/sections/projects-section.tsx`
+- `components/home/sections/hero-section.tsx`
+- `components/home/code-showcase.tsx`
+- `components/home/visuals/`
 
-### Modifier les textes
+## 12. Verifications avant livraison
 
-Tous les textes bilingues sont centralises dans `content/translations.ts`.
-
-## Bonnes pratiques de travail
-
-- ne pas remettre de logique de contenu dans les composants de rendu
-- ne pas reintroduire de gros kits UI inutilises
-- garder les hash links internes sur `ScrollLink`
-- verifier TypeScript apres chaque refactor
-- traiter la performance avant d'ajouter de nouveaux effets visuels lourds
-
-## Verifications recommandees avant merge
+Toujours lancer au minimum :
 
 ```bash
 pnpm exec tsc --noEmit
 pnpm build
 ```
 
-## Pistes d'amelioration futures
+## 13. Principes de maintenance
 
-- alleger encore `package.json` en supprimant les dependances orphelines
-- ajouter de vraies pages SEO par service
-- brancher un vrai formulaire contact
-- generer une image Open Graph dediee
-- ajouter analytics/consentement si besoin business
+Quand tu modifies ce projet :
+
+- garde la separation entre contenu et rendu
+- evite de recoder des donnees en dur dans les composants
+- preserve la coherence visuelle
+- n'ajoute pas d'effets lourds gratuitement
+- garde le code lisible et centré produit
+
+## 14. Axes d'amelioration futurs
+
+- brancher un vrai backend de formulaire
+- creer des pages SEO dediees par service
+- ajouter une vraie couche analytics si necessaire
+- nettoyer encore les dependances non utilisees
+- produire des etudes de cas plus detaillees

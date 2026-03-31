@@ -64,16 +64,18 @@ export function EcosystemSection() {
   const marqueeItems = [...PARTNER_NAMES, ...PARTNER_NAMES]
 
   return (
-    <section className="relative overflow-hidden bg-background py-24">
+    <section className="relative overflow-hidden bg-background py-20 sm:py-24">
       <div className="absolute inset-0 bg-[linear-gradient(rgba(127,127,127,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(127,127,127,0.08)_1px,transparent_1px)] bg-[size:72px_72px] opacity-30" />
       <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-primary/8 via-transparent to-transparent" />
 
-      <div className="container relative z-10 mx-auto px-4">
-        <ScrollAnimation variant="fadeUp" className="mb-14 text-center">
-          <h2 className="mb-4 text-3xl font-bold sm:text-4xl md:text-5xl">
+      <div className="container relative z-10 mx-auto px-4 sm:px-6">
+        <ScrollAnimation variant="fadeUp" className="mb-12 text-center sm:mb-14">
+          <h2 className="mb-4 text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
             {t('ecosystem.title.prefix')} <span className="text-primary">{t('ecosystem.title.highlight')}</span>
           </h2>
-          <p className="mx-auto max-w-3xl text-lg text-muted-foreground">{t('ecosystem.description')}</p>
+          <p className="mx-auto max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+            {t('ecosystem.description')}
+          </p>
         </ScrollAnimation>
 
         <div className="relative mx-auto max-w-6xl">
@@ -91,7 +93,7 @@ export function EcosystemSection() {
             ))}
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-5 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
             {DELIVERY_FLOW_CARDS.map((card, index) => (
               <motion.div
                 key={card.title}
@@ -100,22 +102,22 @@ export function EcosystemSection() {
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.55, delay: index * 0.08 }}
                 className={cn(
-                  'relative rounded-[28px] border bg-background/78 p-6 backdrop-blur-2xl',
+                  'relative rounded-[24px] border bg-background/82 p-5 backdrop-blur-2xl sm:rounded-[28px] sm:p-6',
                   TONE_STYLES[card.tone].border,
                   TONE_STYLES[card.tone].glow,
                 )}
               >
-                <div className="mb-5 flex items-center justify-between gap-4">
+                <div className="mb-5 flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-sm font-semibold">{card.title}</p>
-                    <p className="mt-1 text-xs text-muted-foreground">Young Solver delivery graph</p>
+                    <p className="text-sm font-semibold sm:text-[15px]">{card.title}</p>
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">Young Solver delivery graph</p>
                   </div>
                   <span className={cn('rounded-full px-2.5 py-1 text-[11px] font-semibold', TONE_STYLES[card.tone].label)}>
                     {card.badge}
                   </span>
                 </div>
 
-                <div className="space-y-3 rounded-2xl border border-border/70 bg-background/88 p-4">
+                <div className="space-y-3 rounded-2xl border border-border/70 bg-background/90 p-4">
                   {card.items.map((item, itemIndex) => (
                     <div key={item} className="flex items-center justify-between gap-3">
                       <div className="flex items-center gap-3">
@@ -125,9 +127,9 @@ export function EcosystemSection() {
                             itemIndex % 2 === 0 ? TONE_STYLES[card.tone].dot : 'bg-primary/60',
                           )}
                         />
-                        <span className="text-sm text-foreground/90">{item}</span>
+                        <span className="text-sm leading-relaxed text-foreground/90">{item}</span>
                       </div>
-                      <span className="text-xs text-emerald-500">Active</span>
+                      <span className="shrink-0 text-xs text-emerald-500">Active</span>
                     </div>
                   ))}
                 </div>
@@ -136,18 +138,22 @@ export function EcosystemSection() {
           </div>
         </div>
 
-        <div className="mt-14 overflow-hidden rounded-full border border-border/70 bg-background/80 backdrop-blur-xl">
-          <div className="flex items-center gap-6 border-b border-border/60 px-5 py-3 text-sm">
-            <span className="font-semibold">{t('ecosystem.partners')}</span>
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-            <span className="text-muted-foreground">trusted delivery ecosystem</span>
+        <div className="mt-12 overflow-hidden rounded-[28px] border border-border/70 bg-background/84 backdrop-blur-xl sm:mt-14 sm:rounded-full">
+          <div className="flex flex-col gap-2 border-b border-border/60 px-5 py-4 text-sm sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6">
+            <div className="flex items-center gap-3">
+              <span className="font-semibold tracking-tight">{t('ecosystem.partners')}</span>
+              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+            </div>
+            <span className="text-xs uppercase tracking-[0.18em] text-muted-foreground sm:text-sm sm:tracking-[0.22em]">
+              trusted delivery ecosystem
+            </span>
           </div>
-          <div className="relative overflow-hidden py-4">
-            <div className="flex w-max animate-[marquee_28s_linear_infinite] gap-4 px-4">
+          <div className="relative overflow-hidden py-4 sm:py-5">
+            <div className="flex w-max animate-[marquee_28s_linear_infinite] gap-3 px-4 sm:gap-4 sm:px-5">
               {marqueeItems.map((partner, index) => (
                 <span
                   key={`${partner}-${index}`}
-                  className="rounded-full border border-border/70 bg-background/88 px-4 py-2 text-sm text-foreground/85 shadow-sm"
+                  className="whitespace-nowrap rounded-full border border-border/70 bg-background/90 px-3 py-2 text-xs text-foreground/85 shadow-sm sm:px-4 sm:text-sm"
                 >
                   {partner}
                 </span>
