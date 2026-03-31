@@ -1,0 +1,116 @@
+'use client'
+
+import dynamic from 'next/dynamic'
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
+import { ArrowRight, ChevronDown } from 'lucide-react'
+import { CodeShowcase } from '@/components/home/code-showcase'
+import { Button } from '@/components/ui/button'
+import { ScrollLink } from '@/components/ui/scroll-link'
+import { useLanguage } from '@/providers/language-provider'
+
+const HeroScene = dynamic(
+  () => import('@/components/home/visuals/hero-scene').then((module) => module.HeroScene),
+  { ssr: false },
+)
+
+export function HeroSection() {
+  const { t } = useLanguage()
+  const [showHeroScene, setShowHeroScene] = useState(false)
+
+  useEffect(() => {
+    const scheduleScene = () => setShowHeroScene(true)
+
+    if ('requestIdleCallback' in window) {
+      const idleCallbackId = window.requestIdleCallback(scheduleScene, { timeout: 1200 })
+
+      return () => window.cancelIdleCallback(idleCallbackId)
+    }
+
+    const timeoutId = globalThis.setTimeout(scheduleScene, 350)
+
+    return () => globalThis.clearTimeout(timeoutId)
+  }, [])
+
+  return (
+    <section id="home" className="relative flex min-h-screen items-center overflow-hidden">
+      <div className="absolute inset-0 opacity-30">
+        {showHeroScene ? <HeroScene /> : null}
+      </div>
+
+      <div className="container relative z-10 mx-auto px-4 py-20 lg:py-0">
+        <div className="grid min-h-[80vh] grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+            className="order-2 lg:order-1"
+          >
+            <motion.h1
+              className="mb-6 text-3xl font-bold leading-tight sm:text-4xl md:text-5xl lg:text-6xl"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <span className="block">{t('hero.title.line1')}</span>
+              <span className="block text-primary">{t('hero.title.line2')}</span>
+              <span className="block">{t('hero.title.line3')}</span>
+            </motion.h1>
+
+            <motion.p
+              className="mb-8 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              {t('hero.description')}
+            </motion.p>
+
+            <motion.div
+              className="flex flex-col gap-4 sm:flex-row"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+            >
+              <Button asChild size="lg" className="px-6 text-base sm:px-8 sm:text-lg">
+                <ScrollLink href="#projects">
+                  {t('hero.primaryAction')}
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </ScrollLink>
+              </Button>
+
+              <Button asChild variant="outline" size="lg" className="glass px-6 text-base sm:px-8 sm:text-lg">
+                <ScrollLink href="#services">{t('hero.secondaryAction')}</ScrollLink>
+              </Button>
+            </motion.div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' }}
+            className="order-1 h-[350px] sm:h-[400px] lg:order-2 lg:h-[500px]"
+          >
+            <CodeShowcase />
+          </motion.div>
+        </div>
+      </div>
+
+      <motion.div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 1 }}
+      >
+        <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
+          <ScrollLink href="#services" ariaLabel={t('hero.scrollLabel')}>
+            <ChevronDown className="h-8 w-8 text-muted-foreground transition-colors hover:text-primary" />
+          </ScrollLink>
+        </motion.div>
+      </motion.div>
+
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/80 via-transparent to-background" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/60 via-transparent to-transparent lg:hidden" />
+    </section>
+  )
+}
