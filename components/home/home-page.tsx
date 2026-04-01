@@ -10,7 +10,7 @@ import { SolutionsSection } from '@/components/home/sections/solutions-section'
 
 export function HomePage() {
   return (
-    <main className="min-h-screen">
+    <main className="relative min-h-screen overflow-x-clip bg-background">
       <SiteHeader />
       <HeroSection />
       <ServicesSection />

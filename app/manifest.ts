@@ -1,17 +1,22 @@
 import type { MetadataRoute } from 'next'
+import { SITE_DESCRIPTION, SITE_NAME } from '@/content/site-config'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Young Solver',
-    short_name: 'Young Solver',
-    description: 'Solutions digitales, developpement web et mobile.',
+    name: SITE_NAME,
+    short_name: SITE_NAME,
+    description: SITE_DESCRIPTION,
     start_url: '/',
+    scope: '/',
     display: 'standalone',
     background_color: '#0A0A0A',
     theme_color: '#0A0A0A',
+    lang: 'fr',
+    categories: ['business', 'productivity', 'technology'],
     icons: [
       {
         src: '/images/favicon.png',
+        type: 'image/png',
       },
       {
         src: '/images/logo-black.png',

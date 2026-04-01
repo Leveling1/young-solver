@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { IntlProvider, useIntl } from 'react-intl'
 import { type Language, type TranslationKey, translations } from '@/content/translations'
 
@@ -23,6 +23,19 @@ function createMessages(language: Language) {
   )
 }
 
+function buildLanguageUrl(language: Language) {
+  const searchParams = new URLSearchParams(window.location.search)
+
+  if (language === 'fr') {
+    searchParams.delete('lang')
+  } else {
+    searchParams.set('lang', language)
+  }
+
+  const nextSearch = searchParams.toString()
+  return `${window.location.pathname}${nextSearch ? `?${nextSearch}` : ''}${window.location.hash}`
+}
+
 function LanguageContextProvider({
   language,
   setLanguage,
@@ -37,7 +50,7 @@ function LanguageContextProvider({
       language,
       setLanguage,
     }),
-    [language],
+    [language, setLanguage],
   )
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>
@@ -45,24 +58,51 @@ function LanguageContextProvider({
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>('fr')
+  const [hasResolvedLanguage, setHasResolvedLanguage] = useState(false)
 
   useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search)
+    const queryLanguage = searchParams.get('lang')
     const storedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY)
+
+    if (isLanguage(queryLanguage)) {
+      setLanguageState(queryLanguage)
+      localStorage.setItem(LANGUAGE_STORAGE_KEY, queryLanguage)
+      setHasResolvedLanguage(true)
+      return
+    }
 
     if (isLanguage(storedLanguage)) {
       setLanguageState(storedLanguage)
     }
+
+    setHasResolvedLanguage(true)
   }, [])
 
-  const setLanguage = (nextLanguage: Language) => {
-    setLanguageState(nextLanguage)
-    localStorage.setItem(LANGUAGE_STORAGE_KEY, nextLanguage)
-  }
+  useEffect(() => {
+    if (!hasResolvedLanguage) {
+      return
+    }
+
+    document.documentElement.lang = language
+    window.history.replaceState(null, '', buildLanguageUrl(language))
+  }, [hasResolvedLanguage, language])
+
+  const setLanguage = useCallback((nextLanguage: Language) => {
+    setLanguageState((currentLanguage) => {
+      if (currentLanguage === nextLanguage) {
+        return currentLanguage
+      }
+
+      localStorage.setItem(LANGUAGE_STORAGE_KEY, nextLanguage)
+      return nextLanguage
+    })
+  }, [])
 
   const messages = useMemo(() => createMessages(language), [language])
 
   return (
-    <IntlProvider locale={language} messages={messages}>
+    <IntlProvider locale={language} defaultLocale="fr" messages={messages}>
       <LanguageContextProvider language={language} setLanguage={setLanguage}>
         {children}
       </LanguageContextProvider>
@@ -80,6 +120,7 @@ export function useLanguage() {
 
   return {
     ...context,
-    t: (key: TranslationKey) => intl.formatMessage({ id: key, defaultMessage: translations[key][context.language] }),
+    t: (key: TranslationKey) =>
+      intl.formatMessage({ id: key, defaultMessage: translations[key][context.language] }),
   }
 }

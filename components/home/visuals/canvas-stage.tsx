@@ -23,8 +23,8 @@ export function CanvasStage({
       <Suspense fallback={<CanvasLoader />}>
         <Canvas
           camera={{ position: [0, 0, 8], fov: 50 }}
-          dpr={[1, 1.5]}
-          performance={{ min: 0.7 }}
+          dpr={[1, 1.2]}
+          performance={{ min: 0.8 }}
           gl={{
             antialias: true,
             alpha: true,

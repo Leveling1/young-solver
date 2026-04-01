@@ -23,7 +23,7 @@ export function ProjectsSection() {
       : FEATURED_PROJECTS.filter((project) => project.category === activeCategory)
 
   return (
-    <section id="projects" className="bg-secondary/20 py-24">
+    <section id="projects" className="relative bg-secondary/18 py-24 backdrop-blur-[2px]">
       <div className="container mx-auto px-4">
         <ScrollAnimation variant="fadeUp" className="mb-12 text-center">
           <h2 className="mb-4 text-3xl font-bold sm:text-4xl md:text-5xl">

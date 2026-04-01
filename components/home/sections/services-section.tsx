@@ -9,7 +9,7 @@ export function ServicesSection() {
   const { t } = useLanguage()
 
   return (
-    <section id="services" className="bg-background py-24">
+    <section id="services" className="relative bg-background/72 py-24 backdrop-blur-[2px]">
       <div className="container mx-auto px-4">
         <ScrollAnimation variant="fadeUp" className="mb-16 text-center">
           <h2 className="mb-4 text-3xl font-bold sm:text-4xl md:text-5xl">

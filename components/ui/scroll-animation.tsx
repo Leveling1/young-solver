@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, ReactNode } from 'react'
-import { motion, useInView, Variants } from 'framer-motion'
+import { motion, useInView, useReducedMotion, useScroll, useSpring, useTransform, Variants } from 'framer-motion'
 
 interface ScrollAnimationProps {
   children: ReactNode
@@ -55,6 +55,47 @@ export function ScrollAnimation({
 }: ScrollAnimationProps) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once, amount })
+  const shouldReduceMotion = useReducedMotion()
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start 92%', 'end 10%'],
+  })
+
+  const depthY = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [44, 0, -18]), {
+    stiffness: 140,
+    damping: 24,
+    mass: 0.35,
+  })
+  const depthScale = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [0.94, 1, 0.985]), {
+    stiffness: 150,
+    damping: 24,
+    mass: 0.38,
+  })
+  const depthOpacity = useSpring(useTransform(scrollYProgress, [0, 0.18, 0.55, 1], [0.5, 0.9, 1, 0.94]), {
+    stiffness: 140,
+    damping: 24,
+    mass: 0.35,
+  })
+  const depthRotateX = useSpring(
+    useTransform(scrollYProgress, [0, 0.5, 1], variant === 'scale' ? [16, 0, -4] : [10, 0, -3]),
+    {
+      stiffness: 130,
+      damping: 24,
+      mass: 0.4,
+    },
+  )
+  const depthRotateY = useSpring(
+    useTransform(
+      scrollYProgress,
+      [0, 0.5, 1],
+      variant === 'fadeLeft' ? [-8, 0, 3] : variant === 'fadeRight' ? [8, 0, -3] : [0, 0, 0],
+    ),
+    {
+      stiffness: 130,
+      damping: 24,
+      mass: 0.4,
+    },
+  )
 
   return (
     <motion.div
@@ -66,6 +107,16 @@ export function ScrollAnimation({
         duration,
         delay,
         ease: [0.25, 0.1, 0.25, 1]
+      }}
+      style={shouldReduceMotion ? undefined : {
+        y: depthY,
+        scale: depthScale,
+        opacity: depthOpacity,
+        rotateX: depthRotateX,
+        rotateY: depthRotateY,
+        transformPerspective: 1200,
+        transformStyle: 'preserve-3d',
+        willChange: 'transform, opacity',
       }}
       className={className}
     >
@@ -118,12 +169,20 @@ export function StaggerItem({
   className?: string
   variant?: keyof typeof variants
 }) {
+  const shouldReduceMotion = useReducedMotion()
+
   return (
     <motion.div
       variants={variants[variant]}
       transition={{
         duration: 0.5,
         ease: [0.25, 0.1, 0.25, 1]
+      }}
+      whileHover={shouldReduceMotion ? undefined : { y: -6, scale: 1.01, rotateX: 2, rotateY: 1 }}
+      style={shouldReduceMotion ? undefined : {
+        transformPerspective: 1200,
+        transformStyle: 'preserve-3d',
+        willChange: 'transform',
       }}
       className={className}
     >

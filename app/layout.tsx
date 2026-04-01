@@ -1,6 +1,15 @@
 import type { Metadata, Viewport } from 'next'
 import { Geist_Mono, Inria_Sans } from 'next/font/google'
 import { StructuredData } from '@/components/seo/structured-data'
+import {
+  SITE_DESCRIPTION,
+  SITE_KEYWORDS,
+  SITE_LANGUAGE_ALTERNATES,
+  SITE_NAME,
+  SITE_SOCIAL_DESCRIPTION,
+  SITE_TITLE,
+  SITE_URL,
+} from '@/content/site-config'
 import { LanguageProvider } from '@/providers/language-provider'
 import { ThemeProvider } from '@/providers/theme-provider'
 import './globals.css'
@@ -17,56 +26,56 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://youngsolver.com'),
+  metadataBase: new URL(SITE_URL),
+  applicationName: SITE_NAME,
   title: {
-    default: 'Young Solver | Solutions digitales',
-    template: '%s | Young Solver',
+    default: SITE_TITLE,
+    template: `%s | ${SITE_NAME}`,
   },
-  description:
-    'Young Solver conçoit des solutions digitales solides: developpement web, mobile, et produits sur mesure.',
-  keywords: [
-    'young solver',
-    'developpement web',
-    'agence digitale',
-    'applications mobiles',
-    'portfolio agence web',
-  ],
-  authors: [{ name: 'Young Solver' }],
+  description: SITE_DESCRIPTION,
+  keywords: [...SITE_KEYWORDS],
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  category: 'technology',
+  classification: 'Software development services',
+  referrer: 'origin-when-cross-origin',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   alternates: {
     canonical: '/',
-    languages: {
-      fr: '/',
-      en: '/?lang=en',
-    },
+    languages: SITE_LANGUAGE_ALTERNATES,
   },
   icons: {
     icon: '/images/favicon.png',
     shortcut: '/images/favicon.png',
     apple: '/images/favicon.png',
   },
+  manifest: '/manifest.webmanifest',
   openGraph: {
-    title: 'Young Solver | Solutions digitales',
-    description:
-      'Developpement web, mobile, et experiences digitales concues pour durer.',
-    url: 'https://youngsolver.com',
-    siteName: 'Young Solver',
+    title: SITE_TITLE,
+    description: SITE_SOCIAL_DESCRIPTION,
+    url: SITE_URL,
+    siteName: SITE_NAME,
     locale: 'fr_FR',
     type: 'website',
     images: [
       {
-        url: '/images/logo-black.png',
+        url: '/opengraph-image',
         width: 1200,
         height: 630,
-        alt: 'Young Solver',
+        alt: `${SITE_NAME} social preview`,
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Young Solver | Solutions digitales',
-    description:
-      'Developpement web, mobile, et experiences digitales concues pour durer.',
-    images: ['/images/logo-black.png'],
+    title: SITE_TITLE,
+    description: SITE_SOCIAL_DESCRIPTION,
+    images: ['/opengraph-image'],
   },
   robots: {
     index: true,
@@ -101,9 +110,9 @@ export default function RootLayout({
         <StructuredData />
         <ThemeProvider
           attribute="class"
-          defaultTheme="night"
-          themes={['light', 'night', 'black', 'cyberpunk']}
-          enableSystem={false}
+          defaultTheme="system"
+          themes={['light', 'black']}
+          enableSystem
           disableTransitionOnChange={false}
         >
           <LanguageProvider>{children}</LanguageProvider>

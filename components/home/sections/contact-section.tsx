@@ -48,7 +48,7 @@ export function ContactSection() {
   }
 
   return (
-    <section id="contact" className="bg-secondary/20 py-24">
+    <section id="contact" className="relative bg-secondary/18 py-24 backdrop-blur-[2px]">
       <div className="container mx-auto px-4">
         <ScrollAnimation variant="fadeUp" className="mb-16 text-center">
           <h2 className="mb-4 text-3xl font-bold sm:text-4xl md:text-5xl">
@@ -92,6 +92,8 @@ export function ContactSection() {
                     </label>
                     <Input
                       id="name"
+                      name="name"
+                      autoComplete="name"
                       value={formValues.name}
                       placeholder={t('contact.name.placeholder')}
                       onChange={(event) => updateField('name', event.target.value)}
@@ -105,7 +107,9 @@ export function ContactSection() {
                     </label>
                     <Input
                       id="email"
+                      name="email"
                       type="email"
+                      autoComplete="email"
                       value={formValues.email}
                       placeholder={t('contact.email.placeholder')}
                       onChange={(event) => updateField('email', event.target.value)}
@@ -121,6 +125,8 @@ export function ContactSection() {
                   </label>
                   <Input
                     id="subject"
+                    name="subject"
+                    autoComplete="organization-title"
                     value={formValues.subject}
                     placeholder={t('contact.subject.placeholder')}
                     onChange={(event) => updateField('subject', event.target.value)}
@@ -135,6 +141,7 @@ export function ContactSection() {
                   </label>
                   <Textarea
                     id="message"
+                    name="message"
                     value={formValues.message}
                     placeholder={t('contact.message.placeholder')}
                     onChange={(event) => updateField('message', event.target.value)}

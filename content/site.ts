@@ -111,42 +111,116 @@ export const SOCIAL_LINKS = [
   { href: 'mailto:youngsolver@gmail.com', icon: Mail, label: 'Email' },
 ] as const
 
-export const DELIVERY_FLOW_CARDS = [
+export const ORCHESTRATION_COLUMNS = [
   {
-    title: 'Edge network',
-    badge: 'Core',
-    tone: 'blue',
-    items: ['Traffic routing', 'DDoS protection', 'Caching layer'],
+    key: 'edge',
+    region: 'Product foundation',
+    panels: [
+      {
+        key: 'product',
+        title: 'Product design',
+        badge: 'Product',
+        tone: 'blue',
+        items: [
+          { icon: 'shield', label: 'Discovery workshop', value: 'Active', state: 'success' },
+          { icon: 'globe', label: 'UX architecture', value: 'Ready', state: 'success' },
+          { icon: 'zap', label: 'UI system', value: 'Reusable', state: 'success' },
+        ],
+      },
+      {
+        key: 'platforms',
+        title: 'Platform scope',
+        badge: 'Scope',
+        tone: 'blue',
+        items: [
+          { icon: 'globe', label: 'Web applications', value: 'Enabled', meta: 'Next.js, React, admin dashboards' },
+          { icon: 'globe', label: 'Mobile applications', value: 'Delivery', meta: 'Flutter for Android and iOS' },
+          { icon: 'globe', label: 'Desktop software', value: 'Available', meta: 'Tauri, Electron, internal tools' },
+        ],
+        footer: '+ Add delivery scope',
+      },
+    ],
   },
   {
-    title: 'Applications',
-    badge: 'Runtime',
-    tone: 'cyan',
-    items: ['Flutter app', 'TypeScript API', 'Worker jobs'],
+    key: 'runtime',
+    region: 'Build and release flow',
+    panels: [
+      {
+        key: 'web',
+        title: 'Web app',
+        badge: 'Web',
+        tone: 'cyan',
+        items: [
+          { icon: 'arrow-left-right', label: 'Frontend stack', value: 'Next.js 16' },
+          { icon: 'box', label: 'Backoffice', value: 'Enabled', state: 'success' },
+          { icon: 'layers', label: 'SEO and analytics', value: 'Ready', state: 'success' },
+        ],
+      },
+      {
+        key: 'mobile',
+        title: 'Mobile app',
+        badge: 'Mobile',
+        tone: 'slate',
+        items: [
+          { icon: 'box', label: 'Shared codebase', value: 'Flutter' },
+          { icon: 'expand', label: 'Native delivery', value: 'iOS + Android' },
+          { icon: 'layers', label: 'Offline sync', value: 'Optional' },
+        ],
+      },
+      {
+        key: 'automation',
+        title: 'Automation',
+        badge: 'Ops',
+        tone: 'slate',
+        items: [
+          { icon: 'box', label: 'CI/CD pipeline', value: 'Active', state: 'success' },
+          { icon: 'clock', label: 'Release workflow', value: 'Tracked', state: 'success' },
+          { icon: 'layers', label: 'QA checkpoints', value: 'Included', state: 'success' },
+        ],
+        footer: '+ Add release flow',
+      },
+    ],
   },
   {
-    title: 'Automation',
-    badge: 'Ops',
-    tone: 'amber',
-    items: ['Queue orchestration', 'Scheduler', 'Deploy hooks'],
-  },
-  {
-    title: 'Data fabric',
-    badge: 'Data',
-    tone: 'violet',
-    items: ['PostgreSQL', 'Redis cache', 'Analytics sync'],
-  },
-  {
-    title: 'AI pipeline',
-    badge: 'Intelligence',
-    tone: 'pink',
-    items: ['Prompt routing', 'Document parsing', 'Response scoring'],
-  },
-  {
-    title: 'Observability',
-    badge: 'Control',
-    tone: 'emerald',
-    items: ['Tracing', 'Alerts', 'Business metrics'],
+    key: 'data',
+    region: 'Cloud and intelligence',
+    menu: ['View architecture', 'Deploy release', 'Open workspace'],
+    panels: [
+      {
+        key: 'backend',
+        title: 'Backend core',
+        badge: 'API',
+        tone: 'amber',
+        previewRows: ['Auth', 'Payments', 'Notifications', 'Sync jobs'],
+        items: [
+          { icon: 'database', label: 'Runtime', value: 'Node.js / Python' },
+          { icon: 'server', label: 'Architecture', value: 'Scalable APIs' },
+        ],
+      },
+      {
+        key: 'intelligence',
+        title: 'AI services',
+        badge: 'AI',
+        tone: 'violet',
+        items: [
+          { icon: 'database', label: 'Assistants and agents', value: 'Integrated', state: 'success' },
+          { icon: 'box', label: 'Document workflows', value: 'Automated' },
+          { icon: 'layers', label: 'Prompt routing', value: 'Managed' },
+        ],
+      },
+      {
+        key: 'cloud',
+        title: 'Cloud ops',
+        badge: 'Cloud',
+        tone: 'violet',
+        items: [
+          { icon: 'eye', label: 'Monitoring', value: 'Visible', state: 'success' },
+          { icon: 'circle', label: 'Deploy target', value: 'Production ready', state: 'success' },
+          { icon: 'globe', label: 'Hosting model', value: 'Cloud managed' },
+        ],
+        footer: '+ Add production service',
+      },
+    ],
   },
 ] as const
 

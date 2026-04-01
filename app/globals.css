@@ -2,7 +2,6 @@
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
-@custom-variant night (&:is(.night *));
 
 /* Light Theme (Default) */
 :root {
@@ -75,43 +74,11 @@
   --logo-filter: invert(1);
 }
 
-/* Night Theme (softer dark - #1a1a2e style) */
-.night, .dark, [data-theme="night"], [data-theme="dark"] {
-  --background: #1a1a2e;
-  --foreground: #FFFFFF;
-  --card: rgba(255, 255, 255, 0.08);
-  --card-foreground: #FFFFFF;
-  --popover: #1a1a2e;
-  --popover-foreground: #FFFFFF;
-  --primary: #007BFF;
-  --primary-foreground: #FFFFFF;
-  --secondary: #2d2d44;
-  --secondary-foreground: #FFFFFF;
-  --muted: #2d2d44;
-  --muted-foreground: #a0a0b0;
-  --accent: #007BFF;
-  --accent-foreground: #FFFFFF;
-  --destructive: #ef4444;
-  --destructive-foreground: #FFFFFF;
-  --border: rgba(255, 255, 255, 0.12);
-  --input: rgba(255, 255, 255, 0.08);
-  --ring: #007BFF;
-  
-  --glass-bg: rgba(255, 255, 255, 0.06);
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --glass-shadow: rgba(0, 0, 0, 0.4);
-  --glass-nav-bg: rgba(26, 26, 46, 0.86);
-  --glass-card-bg: rgba(29, 31, 52, 0.8);
-  
-  --scene-bg: #1a1a2e;
-  --cube-color: #007BFF;
-  --cube-wireframe: #FFFFFF;
-  
-  --logo-filter: invert(0);
-}
-
-/* Black OLED Theme */
-.black, [data-theme="black"] {
+/* Black Theme and system dark */
+.black,
+.dark,
+[data-theme="black"],
+[data-theme="dark"] {
   --background: #000000;
   --foreground: #FFFFFF;
   --card: rgba(255, 255, 255, 0.03);
@@ -141,41 +108,6 @@
   --scene-bg: #000000;
   --cube-color: #007BFF;
   --cube-wireframe: #FFFFFF;
-  
-  --logo-filter: invert(0);
-}
-
-/* Cyberpunk Theme */
-.cyberpunk, [data-theme="cyberpunk"] {
-  --background: #0D0221;
-  --foreground: #FFFFFF;
-  --card: rgba(255, 0, 255, 0.08);
-  --card-foreground: #FFFFFF;
-  --popover: #0D0221;
-  --popover-foreground: #FFFFFF;
-  --primary: #FF00FF;
-  --primary-foreground: #FFFFFF;
-  --secondary: #2D1B4E;
-  --secondary-foreground: #FFFFFF;
-  --muted: #2D1B4E;
-  --muted-foreground: #00FFFF;
-  --accent: #00FFFF;
-  --accent-foreground: #0D0221;
-  --destructive: #FF0055;
-  --destructive-foreground: #FFFFFF;
-  --border: rgba(255, 0, 255, 0.2);
-  --input: rgba(255, 0, 255, 0.1);
-  --ring: #00FFFF;
-  
-  --glass-bg: rgba(255, 0, 255, 0.08);
-  --glass-border: rgba(0, 255, 255, 0.2);
-  --glass-shadow: rgba(255, 0, 255, 0.3);
-  --glass-nav-bg: rgba(18, 4, 41, 0.88);
-  --glass-card-bg: rgba(26, 8, 55, 0.82);
-  
-  --scene-bg: #0D0221;
-  --cube-color: #FF00FF;
-  --cube-wireframe: #00FFFF;
   
   --logo-filter: invert(0);
 }

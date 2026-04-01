@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Moon, Monitor, Sparkles, Sun } from 'lucide-react'
+import { Moon, Monitor, Sun } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { Button } from '@/components/ui/button'
 import {
@@ -13,9 +13,8 @@ import {
 
 const THEME_OPTIONS = [
   { value: 'light', label: 'Light', icon: Sun },
-  { value: 'night', label: 'Night', icon: Moon },
-  { value: 'black', label: 'Black', icon: Monitor },
-  { value: 'cyberpunk', label: 'Cyberpunk', icon: Sparkles },
+  { value: 'black', label: 'Black', icon: Moon },
+  { value: 'system', label: 'System', icon: Monitor },
 ] as const
 
 export function ThemeSwitcher() {
@@ -26,16 +25,26 @@ export function ThemeSwitcher() {
     setIsMounted(true)
   }, [])
 
+  useEffect(() => {
+    if (!isMounted) {
+      return
+    }
+
+    if (theme === 'night' || theme === 'cyberpunk' || theme === 'dark') {
+      setTheme('black')
+    }
+  }, [isMounted, setTheme, theme])
+
   if (!isMounted) {
     return (
       <Button variant="ghost" size="icon" className="glass rounded-full">
-        <Moon className="h-5 w-5" />
+        <Monitor className="h-5 w-5" />
         <span className="sr-only">Changer de theme</span>
       </Button>
     )
   }
 
-  const currentTheme = THEME_OPTIONS.find((option) => option.value === theme) ?? THEME_OPTIONS[1]
+  const currentTheme = THEME_OPTIONS.find((option) => option.value === theme) ?? THEME_OPTIONS[2]
   const CurrentIcon = currentTheme.icon
 
   return (

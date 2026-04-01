@@ -1,6 +1,8 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
+import { useTheme } from 'next-themes'
 import { cn } from '@/lib/utils'
 
 type BrandLogoProps = {
@@ -9,28 +11,25 @@ type BrandLogoProps = {
 }
 
 export function BrandLogo({ size, className }: BrandLogoProps) {
+  const { resolvedTheme, theme } = useTheme()
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  const shouldUseWhiteLogo =
+    isMounted && (theme === 'black' || resolvedTheme === 'dark')
+
   return (
-    <span className={cn('relative inline-flex items-center justify-center', className)} style={{ width: size, height: size }}>
-      <Image
-        src="/images/logo-black.png"
-        alt="Young Solver"
-        width={size}
-        height={size}
-        className="block h-full w-full object-contain dark:hidden night:hidden black:hidden cyberpunk:hidden"
-        sizes={`${size}px`}
-        quality={85}
-        priority
-      />
-      <Image
-        src="/images/logo-white.png"
-        alt="Young Solver"
-        width={size}
-        height={size}
-        className="hidden h-full w-full object-contain dark:block night:block black:block cyberpunk:block"
-        sizes={`${size}px`}
-        quality={85}
-        priority
-      />
-    </span>
+    <Image
+      src={shouldUseWhiteLogo ? '/images/logo-white.png' : '/images/logo-black.png'}
+      alt="Young Solver"
+      width={size}
+      height={size}
+      className={cn('object-contain', className)}
+      sizes={`${size}px`}
+      quality={80}
+    />
   )
 }

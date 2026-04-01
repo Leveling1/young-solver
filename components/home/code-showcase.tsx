@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 
 const CODE_SNIPPETS = [
@@ -74,6 +74,9 @@ const SYNTAX_COLORS: Record<string, Record<string, string>> = {
   },
 }
 
+const KEYWORDS = ['async', 'await', 'class', 'const', 'export', 'final', 'Future', 'interface', 'return', 'true']
+const TYPES = ['DeliveryFlow', 'Future', 'String', 'YoungSolverApp']
+
 function renderToken(
   token: string,
   colors: Record<string, string>,
@@ -106,8 +109,6 @@ function renderToken(
 
 function highlightCode(code: string, language: string) {
   const colors = SYNTAX_COLORS[language] ?? SYNTAX_COLORS.javascript
-  const keywords = ['async', 'await', 'class', 'const', 'export', 'final', 'Future', 'interface', 'return', 'true']
-  const types = ['DeliveryFlow', 'Future', 'String', 'YoungSolverApp']
 
   return code.split('\n').map((line, lineIndex) => {
     const tokens: React.ReactNode[] = []
@@ -120,7 +121,7 @@ function highlightCode(code: string, language: string) {
 
       if (!isInsideString && character.match(/["'`]/)) {
         if (currentToken) {
-          tokens.push(renderToken(currentToken, colors, keywords, types, `${lineIndex}-${characterIndex}-token`))
+          tokens.push(renderToken(currentToken, colors, KEYWORDS, TYPES, `${lineIndex}-${characterIndex}-token`))
           currentToken = ''
         }
 
@@ -145,7 +146,7 @@ function highlightCode(code: string, language: string) {
 
       if (!isInsideString && /[\s()[\]{}:;,=<>]/.test(character)) {
         if (currentToken) {
-          tokens.push(renderToken(currentToken, colors, keywords, types, `${lineIndex}-${characterIndex}-token`))
+          tokens.push(renderToken(currentToken, colors, KEYWORDS, TYPES, `${lineIndex}-${characterIndex}-token`))
           currentToken = ''
         }
 
@@ -167,7 +168,7 @@ function highlightCode(code: string, language: string) {
             {currentToken}
           </span>
         ) : (
-          renderToken(currentToken, colors, keywords, types, `${lineIndex}-token-end`)
+          renderToken(currentToken, colors, KEYWORDS, TYPES, `${lineIndex}-token-end`)
         ),
       )
     }
@@ -189,39 +190,65 @@ export function CodeShowcase() {
   const [isTyping, setIsTyping] = useState(true)
   const [tilt, setTilt] = useState({ rotateX: -5, rotateY: 8 })
   const cardRef = useRef<HTMLDivElement>(null)
-  const typingHandleRef = useRef<NodeJS.Timeout | null>(null)
+  const typingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const nextSnippetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const clearTimers = useCallback(() => {
+    if (typingIntervalRef.current) {
+      clearInterval(typingIntervalRef.current)
+      typingIntervalRef.current = null
+    }
+
+    if (nextSnippetTimeoutRef.current) {
+      clearTimeout(nextSnippetTimeoutRef.current)
+      nextSnippetTimeoutRef.current = null
+    }
+  }, [])
+
+  const emitHeroLogoInteraction = useCallback((active: boolean, x = 0, y = 0) => {
+    window.dispatchEvent(
+      new CustomEvent('hero-logo-interaction', {
+        detail: { active, x, y },
+      }),
+    )
+  }, [])
 
   useEffect(() => {
     const activeSnippet = CODE_SNIPPETS[activeSnippetIndex]
     let characterIndex = 0
 
+    clearTimers()
     setDisplayedCode('')
     setIsTyping(true)
 
-    typingHandleRef.current = setInterval(() => {
+    typingIntervalRef.current = setInterval(() => {
       if (characterIndex < activeSnippet.code.length) {
         setDisplayedCode(activeSnippet.code.slice(0, characterIndex + 1))
         characterIndex += 1
         return
       }
 
-      if (typingHandleRef.current) {
-        clearInterval(typingHandleRef.current)
+      if (typingIntervalRef.current) {
+        clearInterval(typingIntervalRef.current)
+        typingIntervalRef.current = null
       }
 
       setIsTyping(false)
 
-      typingHandleRef.current = setTimeout(() => {
+      nextSnippetTimeoutRef.current = setTimeout(() => {
         setActiveSnippetIndex((currentIndex) => (currentIndex + 1) % CODE_SNIPPETS.length)
       }, 2200)
     }, 26)
 
+    return clearTimers
+  }, [activeSnippetIndex, clearTimers])
+
+  useEffect(() => {
     return () => {
-      if (typingHandleRef.current) {
-        clearTimeout(typingHandleRef.current)
-      }
+      clearTimers()
+      emitHeroLogoInteraction(false)
     }
-  }, [activeSnippetIndex])
+  }, [clearTimers, emitHeroLogoInteraction])
 
   const activeSnippet = CODE_SNIPPETS[activeSnippetIndex]
 
@@ -240,6 +267,8 @@ export function CodeShowcase() {
       rotateX: offsetY * -10,
       rotateY: offsetX * 14,
     })
+
+    emitHeroLogoInteraction(true, offsetX, offsetY)
   }
 
   return (
@@ -249,9 +278,13 @@ export function CodeShowcase() {
 
       <motion.div
         ref={cardRef}
+        onMouseEnter={() => emitHeroLogoInteraction(true)}
         onMouseMove={handlePointerMove}
-        onMouseLeave={() => setTilt({ rotateX: -5, rotateY: 8 })}
-        className="relative w-full max-w-xl rounded-[28px] border border-white/10 bg-background/78 shadow-[0_28px_70px_rgba(0,0,0,0.28)] backdrop-blur-2xl"
+        onMouseLeave={() => {
+          setTilt({ rotateX: -5, rotateY: 8 })
+          emitHeroLogoInteraction(false)
+        }}
+        className="relative w-full max-w-[29rem] rounded-[28px] border border-white/10 bg-background/78 shadow-[0_28px_70px_rgba(0,0,0,0.28)] backdrop-blur-2xl"
         initial={{ opacity: 0, scale: 0.92 }}
         animate={{ opacity: 1, scale: 1, rotateX: tilt.rotateX, rotateY: tilt.rotateY }}
         transition={{ duration: 0.45, ease: 'easeOut' }}
@@ -271,7 +304,7 @@ export function CodeShowcase() {
           </div>
         </div>
 
-        <div className="min-h-[300px] overflow-hidden p-5 font-mono text-xs sm:text-sm">
+        <div className="min-h-[288px] overflow-hidden p-5 font-mono text-xs sm:text-sm">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSnippetIndex}

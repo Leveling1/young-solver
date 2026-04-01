@@ -22,7 +22,8 @@ export function SiteHeader() {
       setHasScrolled(window.scrollY > 20)
     }
 
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
 
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
@@ -37,7 +38,7 @@ export function SiteHeader() {
         hasScrolled ? 'glass-nav py-3' : 'py-5',
       )}
     >
-      <nav className="container mx-auto flex items-center justify-between px-4">
+      <nav aria-label="Navigation principale" className="container mx-auto flex items-center justify-between px-4">
         <ScrollLink href="#home" className="group flex items-center gap-3">
           <motion.div whileHover={{ rotate: 180 }} transition={{ duration: 0.5 }}>
             <BrandLogo size={40} className="rounded-lg" />
@@ -77,6 +78,8 @@ export function SiteHeader() {
             variant="ghost"
             size="icon"
             className="md:hidden"
+            aria-controls="mobile-navigation"
+            aria-expanded={isMobileMenuOpen}
             onClick={() => setIsMobileMenuOpen((currentValue) => !currentValue)}
           >
             <AnimatePresence mode="wait">
@@ -115,7 +118,7 @@ export function SiteHeader() {
             transition={{ duration: 0.3 }}
             className="overflow-hidden md:hidden"
           >
-            <div className="glass-nav mx-4 mt-2 rounded-xl p-4">
+            <div id="mobile-navigation" className="glass-nav mx-4 mt-2 rounded-xl p-4">
               <div className="flex flex-col gap-2">
                 {HOME_SECTION_IDS.map((sectionId, index) => (
                   <motion.div

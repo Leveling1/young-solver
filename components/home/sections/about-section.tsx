@@ -10,7 +10,7 @@ export function AboutSection() {
   const { t } = useLanguage()
 
   return (
-    <section id="about" className="overflow-hidden bg-background py-24">
+    <section id="about" className="relative overflow-hidden bg-background/72 py-24 backdrop-blur-[2px]">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
           <ScrollAnimation variant="fadeLeft">
