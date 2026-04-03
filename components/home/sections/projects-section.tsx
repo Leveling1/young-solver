@@ -38,24 +38,39 @@ export function ProjectsSection() {
                 variant={activeCategory === category ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setActiveCategory(category)}
-                className={cn('transition-all', activeCategory !== category && 'glass')}
+                className={cn(
+                  'relative overflow-hidden transition-all duration-300',
+                  activeCategory !== category && 'glass hover:border-primary/25 hover:text-foreground',
+                )}
               >
-                {t(`projects.filter.${category}`)}
+                {activeCategory === category ? (
+                  <motion.span
+                    layoutId="project-filter-indicator"
+                    className="absolute inset-0 rounded-[inherit] bg-primary"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                ) : null}
+                <span className="relative z-10">{t(`projects.filter.${category}`)}</span>
               </Button>
             ))}
           </div>
         </ScrollAnimation>
 
-        <motion.div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" layout>
-          <AnimatePresence mode="popLayout">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={activeCategory}
+            className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.28, ease: 'easeOut' }}
+          >
             {filteredProjects.map((project, index) => (
               <motion.div
-                key={project.key}
-                layout
-                initial={{ opacity: 0, scale: 0.88, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.88, y: 20 }}
-                transition={{ duration: 0.35, delay: index * 0.08, layout: { duration: 0.3 } }}
+                key={`${activeCategory}-${project.key}`}
+                initial={{ opacity: 0, y: 24, scale: 0.97, filter: 'blur(8px)' }}
+                animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+                transition={{ duration: 0.34, delay: index * 0.05, ease: 'easeOut' }}
               >
                 <GlassCard className="group h-full overflow-hidden p-0">
                   <div className="relative h-48 w-full overflow-hidden" style={{ background: project.gradient }}>
@@ -107,8 +122,8 @@ export function ProjectsSection() {
                 </GlassCard>
               </motion.div>
             ))}
-          </AnimatePresence>
-        </motion.div>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </section>
   )

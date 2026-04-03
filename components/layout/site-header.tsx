@@ -12,33 +12,73 @@ import { HOME_SECTION_IDS } from '@/content/site'
 import { cn } from '@/lib/utils'
 import { useLanguage } from '@/providers/language-provider'
 
+type HomeSectionId = (typeof HOME_SECTION_IDS)[number]
+
 export function SiteHeader() {
   const { t } = useLanguage()
   const [hasScrolled, setHasScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [hoveredSectionId, setHoveredSectionId] = useState<HomeSectionId | null>(null)
+  const [activeSectionId, setActiveSectionId] = useState<HomeSectionId>(HOME_SECTION_IDS[0] ?? 'services')
 
   useEffect(() => {
+    let animationFrameId = 0
+
     const handleScroll = () => {
+      animationFrameId = 0
       setHasScrolled(window.scrollY > 20)
+
+      const threshold = window.innerHeight * 0.32
+      let nextSectionId: HomeSectionId = HOME_SECTION_IDS[0] ?? 'services'
+
+      for (const sectionId of HOME_SECTION_IDS) {
+        const sectionElement = document.getElementById(sectionId)
+
+        if (sectionElement && sectionElement.getBoundingClientRect().top <= threshold) {
+          nextSectionId = sectionId
+        }
+      }
+
+      setActiveSectionId((currentSectionId) =>
+        currentSectionId === nextSectionId ? currentSectionId : nextSectionId,
+      )
     }
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll()
+    const queueHeaderUpdate = () => {
+      if (animationFrameId) {
+        return
+      }
 
-    return () => window.removeEventListener('scroll', handleScroll)
+      animationFrameId = window.requestAnimationFrame(handleScroll)
+    }
+
+    window.addEventListener('scroll', queueHeaderUpdate, { passive: true })
+    window.addEventListener('resize', queueHeaderUpdate)
+    queueHeaderUpdate()
+
+    return () => {
+      window.removeEventListener('scroll', queueHeaderUpdate)
+      window.removeEventListener('resize', queueHeaderUpdate)
+
+      if (animationFrameId) {
+        window.cancelAnimationFrame(animationFrameId)
+      }
+    }
   }, [])
+
+  const desktopIndicatorId = hoveredSectionId ?? activeSectionId
 
   return (
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
-      className={cn(
-        'fixed inset-x-0 top-0 z-50 transition-all duration-300',
-        hasScrolled ? 'glass-nav py-3' : 'py-5',
-      )}
+      className={cn('fixed inset-x-0 top-0 z-50 transition-all duration-300', hasScrolled ? 'py-3' : 'py-5')}
     >
-      <nav aria-label="Navigation principale" className="container mx-auto flex items-center justify-between px-4">
+      <nav
+        aria-label="Navigation principale"
+        className="container mx-auto flex items-center justify-between gap-3 px-4"
+      >
         <ScrollLink href="#home" className="group flex items-center gap-3">
           <motion.div whileHover={{ rotate: 180 }} transition={{ duration: 0.5 }}>
             <BrandLogo size={40} className="rounded-lg" />
@@ -48,22 +88,73 @@ export function SiteHeader() {
           </span>
         </ScrollLink>
 
-        <div className="hidden items-center gap-8 md:flex">
-          {HOME_SECTION_IDS.map((sectionId) => (
-            <ScrollLink
-              key={sectionId}
-              href={`#${sectionId}`}
-              className="group relative text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {t(`nav.${sectionId}`)}
-              <motion.span
-                className="absolute -bottom-1 left-0 h-0.5 bg-primary"
-                initial={{ width: 0 }}
-                whileHover={{ width: '100%' }}
-                transition={{ duration: 0.3 }}
-              />
-            </ScrollLink>
-          ))}
+        <div className="hidden flex-1 justify-center md:flex">
+          <AnimatePresence initial={false} mode="wait">
+            {hasScrolled ? (
+              <motion.div
+                key="scrolled-desktop-nav"
+                initial={{ opacity: 0, y: -10, scale: 0.94 }}
+                animate={{ opacity: 1, y: 0, scale: 0.98 }}
+                exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                transition={{ duration: 0.28, ease: 'easeOut' }}
+                className="relative flex items-center gap-1 rounded-[1.4rem] border border-border/70 bg-background/78 p-1.5 shadow-[0_18px_44px_rgba(0,0,0,0.16)] backdrop-blur-xl supports-[backdrop-filter]:bg-background/64"
+                onMouseLeave={() => setHoveredSectionId(null)}
+              >
+                {HOME_SECTION_IDS.map((sectionId) => {
+                  const isHighlighted = desktopIndicatorId === sectionId
+
+                  return (
+                    <ScrollLink
+                      key={sectionId}
+                      href={`#${sectionId}`}
+                      className="relative rounded-[1rem] px-4 py-2.5 text-sm font-semibold text-muted-foreground transition-colors duration-200 hover:text-foreground"
+                      onClick={() => setHoveredSectionId(null)}
+                    >
+                      <span
+                        aria-hidden
+                        className="absolute inset-0"
+                        onMouseEnter={() => setHoveredSectionId(sectionId)}
+                        onFocus={() => setHoveredSectionId(sectionId)}
+                      />
+                      {isHighlighted ? (
+                        <motion.span
+                          layoutId="desktop-nav-indicator"
+                          className="pointer-events-none absolute inset-0 rounded-[1rem] border border-border/70 bg-foreground/[0.05] shadow-[inset_0_1px_0_rgba(255,255,255,0.10)]"
+                          transition={{ type: 'spring', stiffness: 360, damping: 30 }}
+                        />
+                      ) : null}
+                      <span className="relative z-10">{t(`nav.${sectionId}`)}</span>
+                    </ScrollLink>
+                  )
+                })}
+              </motion.div>
+            ) : (
+              <motion.div
+                key="top-desktop-nav"
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.22, ease: 'easeOut' }}
+                className="flex items-center gap-8"
+              >
+                {HOME_SECTION_IDS.map((sectionId) => (
+                  <ScrollLink
+                    key={sectionId}
+                    href={`#${sectionId}`}
+                    className="group relative text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    {t(`nav.${sectionId}`)}
+                    <motion.span
+                      className="absolute -bottom-1 left-0 h-0.5 bg-primary"
+                      initial={{ width: 0 }}
+                      whileHover={{ width: '100%' }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  </ScrollLink>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         <div className="flex items-center gap-2 sm:gap-4">

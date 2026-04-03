@@ -244,3 +244,51 @@ section[id] {
     transform: translateX(-50%);
   }
 }
+
+.ambient-scroll-grid {
+  background-image:
+    radial-gradient(circle, color-mix(in srgb, var(--foreground) 10%, transparent) 1px, transparent 1.35px);
+  background-size: 28px 28px;
+  mask-image: linear-gradient(180deg, transparent 0%, black 15%, black 84%, transparent 100%);
+  opacity: 0.12;
+}
+
+.ambient-scroll-cluster {
+  opacity: 0.22;
+}
+
+.ambient-scroll-cluster::before,
+.ambient-scroll-cluster::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.ambient-scroll-cluster::before {
+  border-radius: 9999px;
+  background-image:
+    radial-gradient(circle, color-mix(in srgb, var(--foreground) 15%, transparent) 1.1px, transparent 1.55px);
+  background-size: 18px 18px;
+  mask-image: radial-gradient(circle at 56% 48%, black 18%, rgba(0, 0, 0, 0.8) 36%, transparent 72%);
+}
+
+.ambient-scroll-cluster::after {
+  inset: 18%;
+  border-radius: 9999px;
+  background: radial-gradient(circle at center, color-mix(in srgb, var(--primary) 12%, transparent), transparent 72%);
+  filter: blur(26px);
+  opacity: 0.78;
+}
+
+.ambient-scroll-cluster-secondary {
+  opacity: 0.18;
+}
+
+.ambient-scroll-cluster-secondary::before {
+  mask-image: radial-gradient(circle at 46% 54%, black 16%, rgba(0, 0, 0, 0.7) 32%, transparent 70%);
+}
+
+.ambient-scroll-cluster-secondary::after {
+  inset: 20%;
+  background: radial-gradient(circle at center, color-mix(in srgb, var(--foreground) 8%, transparent), transparent 74%);
+}

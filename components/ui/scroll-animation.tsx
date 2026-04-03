@@ -1,7 +1,16 @@
 'use client'
 
 import { useRef, ReactNode } from 'react'
-import { motion, useInView, useReducedMotion, useScroll, useSpring, useTransform, Variants } from 'framer-motion'
+import {
+  motion,
+  useInView,
+  useMotionTemplate,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+  Variants,
+} from 'framer-motion'
 
 interface ScrollAnimationProps {
   children: ReactNode
@@ -62,40 +71,22 @@ export function ScrollAnimation({
   })
 
   const depthY = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [44, 0, -18]), {
-    stiffness: 140,
-    damping: 24,
-    mass: 0.35,
+    stiffness: 120,
+    damping: 26,
+    mass: 0.45,
   })
-  const depthScale = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [0.94, 1, 0.985]), {
-    stiffness: 150,
-    damping: 24,
-    mass: 0.38,
+  const depthScale = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [0.965, 1, 0.992]), {
+    stiffness: 120,
+    damping: 26,
+    mass: 0.45,
   })
-  const depthOpacity = useSpring(useTransform(scrollYProgress, [0, 0.18, 0.55, 1], [0.5, 0.9, 1, 0.94]), {
-    stiffness: 140,
-    damping: 24,
-    mass: 0.35,
+  const depthOpacity = useSpring(useTransform(scrollYProgress, [0, 0.16, 0.55, 1], [0.68, 0.96, 1, 0.95]), {
+    stiffness: 120,
+    damping: 26,
+    mass: 0.45,
   })
-  const depthRotateX = useSpring(
-    useTransform(scrollYProgress, [0, 0.5, 1], variant === 'scale' ? [16, 0, -4] : [10, 0, -3]),
-    {
-      stiffness: 130,
-      damping: 24,
-      mass: 0.4,
-    },
-  )
-  const depthRotateY = useSpring(
-    useTransform(
-      scrollYProgress,
-      [0, 0.5, 1],
-      variant === 'fadeLeft' ? [-8, 0, 3] : variant === 'fadeRight' ? [8, 0, -3] : [0, 0, 0],
-    ),
-    {
-      stiffness: 130,
-      damping: 24,
-      mass: 0.4,
-    },
-  )
+  const blurAmount = useTransform(scrollYProgress, [0, 0.28, 1], [10, 0, 1.2])
+  const depthBlur = useMotionTemplate`blur(${blurAmount}px)`
 
   return (
     <motion.div
@@ -108,16 +99,17 @@ export function ScrollAnimation({
         delay,
         ease: [0.25, 0.1, 0.25, 1]
       }}
-      style={shouldReduceMotion ? undefined : {
-        y: depthY,
-        scale: depthScale,
-        opacity: depthOpacity,
-        rotateX: depthRotateX,
-        rotateY: depthRotateY,
-        transformPerspective: 1200,
-        transformStyle: 'preserve-3d',
-        willChange: 'transform, opacity',
-      }}
+      style={
+        shouldReduceMotion
+          ? undefined
+          : {
+              y: depthY,
+              scale: depthScale,
+              opacity: depthOpacity,
+              filter: depthBlur,
+              willChange: 'transform, opacity, filter',
+            }
+      }
       className={className}
     >
       {children}

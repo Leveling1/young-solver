@@ -113,7 +113,7 @@ export default function RootLayout({
           defaultTheme="system"
           themes={['light', 'black']}
           enableSystem
-          disableTransitionOnChange={false}
+          disableTransitionOnChange
         >
           <LanguageProvider>{children}</LanguageProvider>
         </ThemeProvider>

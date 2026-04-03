@@ -4,22 +4,21 @@ import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, ChevronDown } from 'lucide-react'
-import { CodeShowcase } from '@/components/home/code-showcase'
 import { Button } from '@/components/ui/button'
 import { ScrollLink } from '@/components/ui/scroll-link'
 import { useLanguage } from '@/providers/language-provider'
 
-const HeroScene = dynamic(
-  () => import('@/components/home/visuals/hero-scene').then((module) => module.HeroScene),
+const HeroLogoStage = dynamic(
+  () => import('@/components/home/visuals/hero-logo-stage').then((module) => module.HeroLogoStage),
   { ssr: false },
 )
 
 export function HeroSection() {
   const { t } = useLanguage()
-  const [showHeroScene, setShowHeroScene] = useState(false)
+  const [showHeroStage, setShowHeroStage] = useState(false)
 
   useEffect(() => {
-    const scheduleScene = () => setShowHeroScene(true)
+    const scheduleScene = () => setShowHeroStage(true)
 
     if ('requestIdleCallback' in window) {
       const idleCallbackId = window.requestIdleCallback(scheduleScene, { timeout: 1200 })
@@ -33,12 +32,11 @@ export function HeroSection() {
   }, [])
 
   return (
-    <section id="home" className="relative flex min-h-screen items-center overflow-hidden">
-      <div className="absolute inset-0 opacity-30">
-        {showHeroScene ? <HeroScene /> : null}
-      </div>
+    <section id="home" className="relative flex min-h-screen items-center overflow-hidden pt-8 lg:pt-14">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(0,123,255,0.14),transparent_22%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),transparent_20%,transparent_80%,rgba(0,0,0,0.02))]" />
 
-      <div className="container relative z-10 mx-auto px-4 py-20 lg:py-0">
+      <div className="container relative z-10 mx-auto px-4 py-20 lg:py-6">
         <div className="grid min-h-[80vh] grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -89,9 +87,13 @@ export function HeroSection() {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' }}
-            className="order-1 h-[350px] sm:h-[400px] lg:order-2 lg:h-[500px]"
+            className="order-1 h-[340px] sm:h-[410px] lg:order-2 lg:mt-8 lg:h-[520px] xl:h-[540px]"
           >
-            <CodeShowcase />
+            {showHeroStage ? (
+              <HeroLogoStage />
+            ) : (
+              <div className="h-full w-full" aria-hidden />
+            )}
           </motion.div>
         </div>
       </div>

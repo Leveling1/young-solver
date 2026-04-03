@@ -2,23 +2,23 @@
 
 import { useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
-import { useTheme } from 'next-themes'
 import * as THREE from 'three'
+import { useActiveThemeMode } from '@/hooks/use-active-theme-mode'
 
 type Segment = [THREE.Vector3, THREE.Vector3]
 
 const THEME_COLORS = {
   light: {
-    points: '#0F172A',
-    lines: '#2563EB',
+    points: '#9CA3AF',
+    lines: '#9CA3AF',
   },
   dark: {
-    points: '#FFFFFF',
-    lines: '#60A5FA',
+    points: '#A7AFBB',
+    lines: '#A7AFBB',
   },
   black: {
-    points: '#FFFFFF',
-    lines: '#3B82F6',
+    points: '#A7AFBB',
+    lines: '#A7AFBB',
   },
 } as const
 
@@ -69,11 +69,11 @@ function createCubeGeometry(cx: number, cy: number, cz: number, size: number) {
 }
 
 export function CursorCubeConstellation() {
-  const { resolvedTheme, theme } = useTheme()
+  const { activeThemeMode } = useActiveThemeMode()
   const { viewport, pointer } = useThree()
   const groupRef = useRef<THREE.Group>(null)
 
-  const themeKey = theme === 'black' ? 'black' : resolvedTheme === 'dark' ? 'dark' : 'light'
+  const themeKey = activeThemeMode === 'black' ? 'black' : 'light'
   const colors = THEME_COLORS[themeKey]
 
   const { linePositions, pointPositions } = useMemo(() => {
@@ -127,17 +127,17 @@ export function CursorCubeConstellation() {
   })
 
   return (
-    <group ref={groupRef} scale={viewport.width > 9 ? 0.95 : 0.72}>
+    <group ref={groupRef} scale={viewport.width > 9 ? 0.88 : 0.68}>
       <points>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[pointPositions, 3]} />
         </bufferGeometry>
         <pointsMaterial
           color={colors.points}
-          size={0.05}
+          size={0.034}
           sizeAttenuation
           transparent
-          opacity={0.34}
+          opacity={0.18}
           depthWrite={false}
         />
       </points>
@@ -146,7 +146,7 @@ export function CursorCubeConstellation() {
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[linePositions, 3]} />
         </bufferGeometry>
-        <lineBasicMaterial color={colors.lines} transparent opacity={0.12} />
+        <lineBasicMaterial color={colors.lines} transparent opacity={0.055} />
       </lineSegments>
     </group>
   )

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { startTransition, useEffect, useState } from 'react'
 import { Moon, Monitor, Sun } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { Button } from '@/components/ui/button'
@@ -47,6 +47,12 @@ export function ThemeSwitcher() {
   const currentTheme = THEME_OPTIONS.find((option) => option.value === theme) ?? THEME_OPTIONS[2]
   const CurrentIcon = currentTheme.icon
 
+  const handleThemeChange = (nextTheme: (typeof THEME_OPTIONS)[number]['value']) => {
+    startTransition(() => {
+      setTheme(nextTheme)
+    })
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -62,7 +68,7 @@ export function ThemeSwitcher() {
           return (
             <DropdownMenuItem
               key={option.value}
-              onClick={() => setTheme(option.value)}
+              onClick={() => handleThemeChange(option.value)}
               className={theme === option.value ? 'text-primary' : ''}
             >
               <Icon className="h-4 w-4" />

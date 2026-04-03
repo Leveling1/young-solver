@@ -1,8 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { useTheme } from 'next-themes'
+import { useActiveThemeMode } from '@/hooks/use-active-theme-mode'
 import { cn } from '@/lib/utils'
 
 type BrandLogoProps = {
@@ -11,15 +10,8 @@ type BrandLogoProps = {
 }
 
 export function BrandLogo({ size, className }: BrandLogoProps) {
-  const { resolvedTheme, theme } = useTheme()
-  const [isMounted, setIsMounted] = useState(false)
-
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
-
-  const shouldUseWhiteLogo =
-    isMounted && (theme === 'black' || resolvedTheme === 'dark')
+  const { activeThemeMode, isMounted } = useActiveThemeMode()
+  const shouldUseWhiteLogo = isMounted && activeThemeMode === 'black'
 
   return (
     <Image
