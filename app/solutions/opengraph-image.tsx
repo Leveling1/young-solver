@@ -14,6 +14,7 @@ export default function OpenGraphImage() {
       <div
         style={{
           display: 'flex',
+          flexDirection: 'column',
           height: '100%',
           width: '100%',
           position: 'relative',
@@ -26,6 +27,10 @@ export default function OpenGraphImage() {
       >
         <div
           style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
             position: 'absolute',
             top: '50%',
             left: '50%',
