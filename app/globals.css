@@ -152,33 +152,33 @@
 /* Glassmorphism utility */
 .glass {
   background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 32px var(--glass-shadow);
+  box-shadow: 0 4px 12px var(--glass-shadow);
 }
 
 .glass-nav {
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--glass-nav-bg) 92%, white 8%), var(--glass-nav-bg));
-  backdrop-filter: blur(18px) saturate(150%);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--glass-border);
-  box-shadow: 0 10px 36px var(--glass-shadow);
+  box-shadow: 0 4px 12px var(--glass-shadow);
 }
 
 .glass-card {
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--glass-card-bg) 94%, white 6%), var(--glass-card-bg));
-  backdrop-filter: blur(16px) saturate(135%);
-  -webkit-backdrop-filter: blur(16px) saturate(135%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--glass-border);
-  box-shadow: 0 10px 30px var(--glass-shadow);
+  box-shadow: 0 4px 12px var(--glass-shadow);
 }
 
 /* Smooth scrolling */
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
 }
 
 section[id] {
