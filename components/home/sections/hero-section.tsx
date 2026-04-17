@@ -15,20 +15,11 @@ const HeroLogoStage = dynamic(
 
 export function HeroSection() {
   const { t } = useLanguage()
-  const [showHeroStage, setShowHeroStage] = useState(false)
+  const [showHeroStage, setShowHeroStage] = useState(true)
 
   useEffect(() => {
-    const scheduleScene = () => setShowHeroStage(true)
-
-    if ('requestIdleCallback' in window) {
-      const idleCallbackId = window.requestIdleCallback(scheduleScene, { timeout: 1200 })
-
-      return () => window.cancelIdleCallback(idleCallbackId)
-    }
-
-    const timeoutId = globalThis.setTimeout(scheduleScene, 350)
-
-    return () => globalThis.clearTimeout(timeoutId)
+    // Ensure hero stage is mounted for initial render
+    setShowHeroStage(true)
   }, [])
 
   return (
@@ -42,10 +33,10 @@ export function HeroSection() {
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="order-2 lg:order-1"
+            className="order-2 text-center lg:order-1 lg:text-left"
           >
             <motion.h1
-              className="mb-6 text-3xl font-bold leading-tight sm:text-4xl md:text-5xl lg:text-6xl"
+              className="mb-6 text-foreground text-3xl font-bold leading-tight sm:text-4xl md:text-5xl lg:text-6xl"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -56,7 +47,7 @@ export function HeroSection() {
             </motion.h1>
 
             <motion.p
-              className="mb-8 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg"
+              className="mb-8 mx-auto max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg lg:mx-0"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
@@ -65,7 +56,7 @@ export function HeroSection() {
             </motion.p>
 
             <motion.div
-              className="flex flex-col gap-4 sm:flex-row"
+              className="flex flex-col gap-4 justify-center sm:flex-row lg:justify-start"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.6 }}
@@ -104,7 +95,7 @@ export function HeroSection() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 1 }}
       >
-        <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
+        <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}>
           <ScrollLink href="#services" ariaLabel={t('hero.scrollLabel')}>
             <ChevronDown className="h-8 w-8 text-muted-foreground transition-colors hover:text-primary" />
           </ScrollLink>
