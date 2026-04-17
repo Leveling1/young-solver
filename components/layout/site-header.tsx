@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { LanguageSwitcher } from '@/components/controls/language-switcher'
@@ -20,8 +20,12 @@ export function SiteHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [hoveredSectionId, setHoveredSectionId] = useState<HomeSectionId | null>(null)
   const [activeSectionId, setActiveSectionId] = useState<HomeSectionId>(HOME_SECTION_IDS[0] ?? 'services')
+  const isFirstRenderRef = useRef(true)
 
   useEffect(() => {
+    // Mark that we've hydrated
+    isFirstRenderRef.current = false
+    
     let animationFrameId = 0
 
     const handleScroll = () => {
@@ -74,40 +78,55 @@ export function SiteHeader() {
       animate={{ y: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
       className={cn('fixed inset-x-0 top-0 z-50 transition-all duration-300', hasScrolled ? 'py-3' : 'py-5')}
+      suppressHydrationWarning
     >
-      <nav
-        aria-label="Navigation principale"
-        className="container mx-auto flex items-center justify-between gap-3 px-4"
-      >
-        <ScrollLink href="#home" className="group flex items-center gap-3">
-          <motion.div whileHover={{ rotate: 180 }} transition={{ duration: 0.5 }}>
-            <BrandLogo size={40} className="rounded-lg" />
-          </motion.div>
-          <span className="hidden text-xl font-bold transition-colors group-hover:text-primary sm:inline">
-            Young Solver
-          </span>
-        </ScrollLink>
+      <nav aria-label="Navigation principale" className="container mx-auto flex items-center justify-between gap-3 px-4">
+        <AnimatePresence>
+          {!hasScrolled ? (
+            <motion.div
+              key="logo-text"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="flex items-center gap-3"
+            >
+              <ScrollLink href="#home" className="group flex items-center gap-3">
+                <motion.div whileHover={{ rotate: 180 }} transition={{ duration: 0.5 }}>
+                  <BrandLogo size={40} className="rounded-lg" />
+                </motion.div>
+                <span className="hidden text-xl font-bold transition-colors group-hover:text-primary sm:inline">
+                  Young Solver
+                </span>
+              </ScrollLink>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
 
         <div className="hidden flex-1 justify-center md:flex">
           <AnimatePresence initial={false} mode="wait">
             {hasScrolled ? (
               <motion.div
-                key="scrolled-desktop-nav"
+                key="scrolled-nav"
                 initial={{ opacity: 0, y: -10, scale: 0.94 }}
                 animate={{ opacity: 1, y: 0, scale: 0.98 }}
                 exit={{ opacity: 0, y: -8, scale: 0.96 }}
-                transition={{ duration: 0.28, ease: 'easeOut' }}
-                className="relative flex items-center gap-1 rounded-[1.4rem] border border-border/70 bg-background/78 p-1.5 shadow-[0_18px_44px_rgba(0,0,0,0.16)] backdrop-blur-xl supports-[backdrop-filter]:bg-background/64"
+                transition={{ duration: 0.28 }}
+                className="relative flex items-center gap-2 rounded-[1.4rem] border border-border/70 bg-background/78 px-3 py-1.5 shadow-[0_8px_16px_rgba(0,0,0,0.08)] backdrop-blur-md"
                 onMouseLeave={() => setHoveredSectionId(null)}
               >
+                <motion.div whileHover={{ rotate: 180 }} transition={{ duration: 0.5 }}>
+                  <ScrollLink href="#home">
+                    <BrandLogo size={32} className="rounded-lg cursor-pointer" />
+                  </ScrollLink>
+                </motion.div>
                 {HOME_SECTION_IDS.map((sectionId) => {
                   const isHighlighted = desktopIndicatorId === sectionId
-
                   return (
                     <ScrollLink
                       key={sectionId}
                       href={`#${sectionId}`}
-                      className="relative rounded-[1rem] px-4 py-2.5 text-sm font-semibold text-muted-foreground transition-colors duration-200 hover:text-foreground"
+                      className="relative rounded-[1rem] px-3 py-2 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
                       onClick={() => setHoveredSectionId(null)}
                     >
                       <span
@@ -116,25 +135,32 @@ export function SiteHeader() {
                         onMouseEnter={() => setHoveredSectionId(sectionId)}
                         onFocus={() => setHoveredSectionId(sectionId)}
                       />
-                      {isHighlighted ? (
+                      {isHighlighted && (
                         <motion.span
-                          layoutId="desktop-nav-indicator"
-                          className="pointer-events-none absolute inset-0 rounded-[1rem] border border-border/70 bg-foreground/[0.05] shadow-[inset_0_1px_0_rgba(255,255,255,0.10)]"
+                          layoutId="nav-indicator"
+                          className="pointer-events-none absolute inset-0 rounded-[1rem] bg-foreground/[0.05]"
                           transition={{ type: 'spring', stiffness: 360, damping: 30 }}
                         />
-                      ) : null}
+                      )}
                       <span className="relative z-10">{t(`nav.${sectionId}`)}</span>
                     </ScrollLink>
                   )
                 })}
+                <div className="ml-2 flex items-center gap-2 border-l border-border/50 pl-2">
+                  <LanguageSwitcher />
+                  <ThemeSwitcher />
+                  <Button asChild size="sm" className="h-7 px-2 text-xs">
+                    <ScrollLink href="#contact">{t('nav.cta')}</ScrollLink>
+                  </Button>
+                </div>
               </motion.div>
             ) : (
               <motion.div
-                key="top-desktop-nav"
+                key="top-nav"
                 initial={{ opacity: 0, y: -6 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.22, ease: 'easeOut' }}
+                transition={{ duration: 0.22 }}
                 className="flex items-center gap-8"
               >
                 {HOME_SECTION_IDS.map((sectionId) => (
@@ -158,40 +184,39 @@ export function SiteHeader() {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-4">
-          <LanguageSwitcher />
-          <ThemeSwitcher />
-
-          <Button asChild className="hidden sm:inline-flex">
-            <ScrollLink href="#contact">{t('nav.cta')}</ScrollLink>
-          </Button>
+          <AnimatePresence>
+            {!hasScrolled && (
+              <motion.div
+                key="controls"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="flex items-center gap-2 sm:gap-4"
+              >
+                <LanguageSwitcher />
+                <ThemeSwitcher />
+                <Button asChild className="hidden sm:inline-flex">
+                  <ScrollLink href="#contact">{t('nav.cta')}</ScrollLink>
+                </Button>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <Button
             variant="ghost"
             size="icon"
             className="md:hidden"
-            aria-controls="mobile-navigation"
             aria-expanded={isMobileMenuOpen}
-            onClick={() => setIsMobileMenuOpen((currentValue) => !currentValue)}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             <AnimatePresence mode="wait">
               {isMobileMenuOpen ? (
-                <motion.div
-                  key="close"
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
+                <motion.div key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}>
                   <X className="h-5 w-5" />
                 </motion.div>
               ) : (
-                <motion.div
-                  key="open"
-                  initial={{ rotate: 90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: -90, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
+                <motion.div key="open" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}>
                   <Menu className="h-5 w-5" />
                 </motion.div>
               )}

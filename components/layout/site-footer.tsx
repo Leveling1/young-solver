@@ -73,7 +73,7 @@ export function SiteFooter() {
 
           {footerSections.map((section) => (
             <div key={section.title}>
-              <h4 className="mb-4 font-semibold">{section.title}</h4>
+              <h4 className="mb-4 font-semibold text-foreground">{section.title}</h4>
               <ul className="space-y-2">
                 {section.links.map((link) => (
                   <li key={link.label}>
