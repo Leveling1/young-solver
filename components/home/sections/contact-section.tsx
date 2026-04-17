@@ -51,19 +51,19 @@ export function ContactSection() {
     <section id="contact" className="relative bg-secondary/18 py-24 backdrop-blur-[2px]">
       <div className="container mx-auto px-4">
         <ScrollAnimation variant="fadeUp" className="mb-16 text-center">
-          <h2 className="mb-4 text-3xl font-bold sm:text-4xl md:text-5xl">
+          <h2 className="mb-4 text-foreground text-3xl font-bold sm:text-4xl md:text-5xl">
             {t('contact.title.prefix')} <span className="text-primary">{t('contact.title.highlight')}</span>
           </h2>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">{t('contact.description')}</p>
         </ScrollAnimation>
 
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 lg:grid-cols-3">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 lg:grid-cols-3">
           <StaggerContainer className="space-y-4" staggerDelay={0.1}>
             {CONTACT_DETAILS.map((contactDetail) => {
               const Icon = contactDetail.icon
 
               return (
-                <StaggerItem key={contactDetail.key} variant="fadeRight">
+                <StaggerItem key={contactDetail.key}>
                   <GlassCard className="flex items-center gap-4">
                     <motion.div
                       className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10"
