@@ -83,6 +83,16 @@ export const SOLUTION_PRODUCTS = [
     tags: ['AI', 'Content', 'Studio'],
     image: '/images/projects/atelierai-app.png',
   },
+  {
+    key: 'vaultdata',
+    tags: ['Data', 'Analytics', 'BI'],
+    image: '/images/projects/vaultdata-app.png',
+  },
+  {
+    key: 'auditflow',
+    tags: ['Audit', 'Compliance', 'Security'],
+    image: '/images/projects/auditflow-app.png',
+  },
 ] as const
 
 export const FEATURED_PROJECTS = [
