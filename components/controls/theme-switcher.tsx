@@ -35,6 +35,7 @@ export function ThemeSwitcher() {
     }
   }, [isMounted, setTheme, theme])
 
+  // Render a placeholder during hydration mismatch window
   if (!isMounted) {
     return (
       <Button variant="ghost" size="icon" className="glass rounded-full">
@@ -56,7 +57,7 @@ export function ThemeSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="glass rounded-full hover:bg-primary/10">
+        <Button variant="ghost" size="icon" className="glass rounded-full hover:bg-primary/10" suppressHydrationWarning>
           <CurrentIcon className="h-5 w-5" />
           <span className="sr-only">Changer de theme</span>
         </Button>

@@ -1,16 +1,6 @@
 'use client'
 
-import { useRef, ReactNode } from 'react'
-import {
-  motion,
-  useInView,
-  useMotionTemplate,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-  Variants,
-} from 'framer-motion'
+import { ReactNode } from 'react'
 
 interface ScrollAnimationProps {
   children: ReactNode
@@ -22,98 +12,14 @@ interface ScrollAnimationProps {
   amount?: number
 }
 
-const variants: Record<string, Variants> = {
-  fadeUp: {
-    hidden: { opacity: 0, y: 60 },
-    visible: { opacity: 1, y: 0 }
-  },
-  fadeDown: {
-    hidden: { opacity: 0, y: -60 },
-    visible: { opacity: 1, y: 0 }
-  },
-  fadeLeft: {
-    hidden: { opacity: 0, x: -60 },
-    visible: { opacity: 1, x: 0 }
-  },
-  fadeRight: {
-    hidden: { opacity: 0, x: 60 },
-    visible: { opacity: 1, x: 0 }
-  },
-  scale: {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { opacity: 1, scale: 1 }
-  },
-  blur: {
-    hidden: { opacity: 0, filter: 'blur(10px)' },
-    visible: { opacity: 1, filter: 'blur(0px)' }
-  },
-  rotate: {
-    hidden: { opacity: 0, rotate: -10, y: 30 },
-    visible: { opacity: 1, rotate: 0, y: 0 }
-  }
-}
-
 export function ScrollAnimation({
   children,
   className,
-  variant = 'fadeUp',
-  delay = 0,
-  duration = 0.6,
-  once = true,
-  amount = 0.3
 }: ScrollAnimationProps) {
-  const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { once, amount })
-  const shouldReduceMotion = useReducedMotion()
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start 92%', 'end 10%'],
-  })
-
-  const depthY = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [44, 0, -18]), {
-    stiffness: 120,
-    damping: 26,
-    mass: 0.45,
-  })
-  const depthScale = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [0.965, 1, 0.992]), {
-    stiffness: 120,
-    damping: 26,
-    mass: 0.45,
-  })
-  const depthOpacity = useSpring(useTransform(scrollYProgress, [0, 0.16, 0.55, 1], [0.68, 0.96, 1, 0.95]), {
-    stiffness: 120,
-    damping: 26,
-    mass: 0.45,
-  })
-  const blurAmount = useTransform(scrollYProgress, [0, 0.28, 1], [10, 0, 1.2])
-  const depthBlur = useMotionTemplate`blur(${blurAmount}px)`
-
   return (
-    <motion.div
-      ref={ref}
-      variants={variants[variant]}
-      initial="hidden"
-      animate={isInView ? 'visible' : 'hidden'}
-      transition={{
-        duration,
-        delay,
-        ease: [0.25, 0.1, 0.25, 1]
-      }}
-      style={
-        shouldReduceMotion
-          ? undefined
-          : {
-              y: depthY,
-              scale: depthScale,
-              opacity: depthOpacity,
-              filter: depthBlur,
-              willChange: 'transform, opacity, filter',
-            }
-      }
-      className={className}
-    >
+    <div className={className}>
       {children}
-    </motion.div>
+    </div>
   )
 }
 
@@ -127,59 +33,25 @@ interface StaggerContainerProps {
 export function StaggerContainer({
   children,
   className,
-  staggerDelay = 0.1,
-  once = true
 }: StaggerContainerProps) {
-  const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { once, amount: 0.2 })
-
   return (
-    <motion.div
-      ref={ref}
-      initial="hidden"
-      animate={isInView ? 'visible' : 'hidden'}
-      variants={{
-        visible: {
-          transition: {
-            staggerChildren: staggerDelay
-          }
-        }
-      }}
-      className={className}
-    >
+    <div className={className}>
       {children}
-    </motion.div>
+    </div>
   )
 }
 
 export function StaggerItem({
   children,
   className,
-  variant = 'fadeUp'
 }: {
   children: ReactNode
   className?: string
-  variant?: keyof typeof variants
 }) {
-  const shouldReduceMotion = useReducedMotion()
-
   return (
-    <motion.div
-      variants={variants[variant]}
-      transition={{
-        duration: 0.5,
-        ease: [0.25, 0.1, 0.25, 1]
-      }}
-      whileHover={shouldReduceMotion ? undefined : { y: -6, scale: 1.01, rotateX: 2, rotateY: 1 }}
-      style={shouldReduceMotion ? undefined : {
-        transformPerspective: 1200,
-        transformStyle: 'preserve-3d',
-        willChange: 'transform',
-      }}
-      className={className}
-    >
+    <div className={className}>
       {children}
-    </motion.div>
+    </div>
   )
 }
 
@@ -187,32 +59,14 @@ export function StaggerItem({
 export function TextReveal({
   children,
   className,
-  delay = 0
 }: {
   children: string
   className?: string
   delay?: number
 }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const isInView = useInView(ref, { once: true, amount: 0.5 })
-
   return (
-    <span ref={ref} className={className}>
-      {children.split('').map((char, index) => (
-        <motion.span
-          key={index}
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{
-            duration: 0.3,
-            delay: delay + index * 0.03,
-            ease: 'easeOut'
-          }}
-          style={{ display: 'inline-block' }}
-        >
-          {char === ' ' ? '\u00A0' : char}
-        </motion.span>
-      ))}
+    <span className={className}>
+      {children}
     </span>
   )
 }
@@ -221,26 +75,14 @@ export function TextReveal({
 export function ParallaxSection({
   children,
   className,
-  speed = 0.5
 }: {
   children: ReactNode
   className?: string
   speed?: number
 }) {
   return (
-    <motion.div
-      className={className}
-      initial={{ y: 0 }}
-      whileInView={{ y: 0 }}
-      viewport={{ once: false }}
-      style={{ willChange: 'transform' }}
-      transition={{
-        type: 'spring',
-        stiffness: 100,
-        damping: 30
-      }}
-    >
+    <div className={className}>
       {children}
-    </motion.div>
+    </div>
   )
 }

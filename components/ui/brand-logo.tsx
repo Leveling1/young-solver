@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+import { useEffect, useState } from 'react'
 import { useActiveThemeMode } from '@/hooks/use-active-theme-mode'
 import { cn } from '@/lib/utils'
 
@@ -10,18 +10,21 @@ type BrandLogoProps = {
 }
 
 export function BrandLogo({ size, className }: BrandLogoProps) {
-  const { activeThemeMode, isMounted } = useActiveThemeMode()
-  const shouldUseWhiteLogo = isMounted && activeThemeMode === 'black'
+  const { activeThemeMode } = useActiveThemeMode()
+  const [src, setSrc] = useState('/images/logo-black.png')
+
+  useEffect(() => {
+    setSrc(activeThemeMode === 'black' ? '/images/logo-white.png' : '/images/logo-black.png')
+  }, [activeThemeMode])
 
   return (
-    <Image
-      src={shouldUseWhiteLogo ? '/images/logo-white.png' : '/images/logo-black.png'}
+    <img
+      src={src}
       alt="Young Solver"
       width={size}
       height={size}
       className={cn('object-contain', className)}
-      sizes={`${size}px`}
-      quality={80}
+      suppressHydrationWarning
     />
   )
 }
