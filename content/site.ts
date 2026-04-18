@@ -150,7 +150,7 @@ export const ABOUT_STATS = [
 ] as const
 
 export const CONTACT_DETAILS = [
-  { icon: Mail, key: 'email', value: 'youngsolver@gmail.com' },
+  { icon: Mail, key: 'email', value: 'youngsolverdrc@gmail.com' },
   { icon: Phone, key: 'phone', value: '+243 983-314-789' },
   { icon: MapPin, key: 'location', value: 'Kinshasa, RDC' },
 ] as const

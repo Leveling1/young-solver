@@ -26,7 +26,7 @@ export const SITE_LANGUAGE_ALTERNATES = {
 } as const
 
 export const BUSINESS_CONTACT = {
-  email: 'youngsolver@gmail.com',
+  email: 'youngsolverdrc@gmail.com',
   phone: '+243 983-314-789',
 } as const
 
