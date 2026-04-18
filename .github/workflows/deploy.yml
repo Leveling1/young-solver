@@ -32,15 +32,21 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # 5. Run TypeScript check
+      # 5. Création du fichier secrets.ts pour le build
+      - name: Create secrets.ts
+        run: |
+          echo "export const SUPABASE_URL = '${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}'" > secrets.ts
+          echo "export const SUPABASE_ANON_KEY = '${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}'" >> secrets.ts
+
+      # 6. Run TypeScript check
       - name: Run TypeScript check
         run: pnpm run type-check || true
 
-      # 6. Build Next.js project
-      - name: Build Next.js project
+      # 7. Build Next.js project
+      - name: Build Next.js project (Export)
         run: pnpm run build
 
-      # 7. Deploy to FTP
+      # 8. Deploy to FTP
       - name: Deploy to FTP Server
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:

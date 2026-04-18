@@ -11,3 +11,4 @@ node_modules
 tsconfig.tsbuildinfo
 out/
 .tmp/
+secrets.ts

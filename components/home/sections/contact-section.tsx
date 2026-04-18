@@ -10,6 +10,8 @@ import { ScrollAnimation, StaggerContainer, StaggerItem } from '@/components/ui/
 import { Textarea } from '@/components/ui/textarea'
 import { CONTACT_DETAILS } from '@/content/site'
 import { useLanguage } from '@/providers/language-provider'
+import { supabase } from '@/lib/supabase'
+import { toast } from 'sonner'
 
 type ContactFormValues = {
   name: string
@@ -26,10 +28,10 @@ const INITIAL_CONTACT_FORM_VALUES: ContactFormValues = {
 }
 
 export function ContactSection() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const [formValues, setFormValues] = useState<ContactFormValues>(INITIAL_CONTACT_FORM_VALUES)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
 
   const updateField = (field: keyof ContactFormValues, value: string) => {
     setFormValues((currentValues) => ({ ...currentValues, [field]: value }))
@@ -37,14 +39,34 @@ export function ContactSection() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
+    // Validation simple du format d'email côté client
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formValues.email)) {
+      setSubmitStatus('error')
+      toast.error(t('contact.error.email'))
+      return
+    }
+
     setIsSubmitting(true)
-    setIsSubmitted(false)
+    setSubmitStatus('idle')
 
-    await new Promise((resolve) => setTimeout(resolve, 900))
+    try {
+      const { error } = await supabase
+        .from('contacts')
+        .insert([formValues])
 
-    setIsSubmitting(false)
-    setIsSubmitted(true)
-    setFormValues(INITIAL_CONTACT_FORM_VALUES)
+      if (error) throw error
+
+      setSubmitStatus('success')
+      setFormValues(INITIAL_CONTACT_FORM_VALUES)
+      toast.success(t('contact.success'))
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi à Supabase:', error)
+      setSubmitStatus('error')
+      toast.error(t('contact.error'))
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -151,11 +173,17 @@ export function ContactSection() {
                   />
                 </div>
 
-                {isSubmitted ? (
-                  <p className="rounded-lg border border-primary/20 bg-primary/10 px-4 py-3 text-sm text-primary">
+                {submitStatus === 'success' && (
+                  <p className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-500">
                     {t('contact.success')}
                   </p>
-                ) : null}
+                )}
+
+                {submitStatus === 'error' && (
+                  <p className="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-500">
+                    {t('contact.error')}
+                  </p>
+                )}
 
                 <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
                   <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>

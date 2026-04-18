@@ -187,8 +187,16 @@ export const translations = {
   'contact.send': { fr: 'Envoyer le message', en: 'Send message' },
   'contact.sending': { fr: 'Envoi en cours...', en: 'Sending...' },
   'contact.success': {
-    fr: 'Merci. Votre demande a bien été préparée.',
-    en: 'Thank you. Your request has been prepared successfully.',
+    fr: 'Votre message a été envoyé avec succès ! Nous vous répondrons très prochainement.',
+    en: 'Your message has been sent successfully! We will get back to you very soon.',
+  },
+  'contact.error': {
+    fr: "Une erreur est survenue. Veuillez vérifier vos informations ou votre connexion réseau.",
+    en: "An error occurred. Please check your information or your network connection.",
+  },
+  'contact.error.email': {
+    fr: "Veuillez entrer une adresse email valide.",
+    en: "Please enter a valid email address.",
   },
 
   'footer.description': {

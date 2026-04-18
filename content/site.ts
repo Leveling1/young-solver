@@ -275,15 +275,3 @@ export const ORCHESTRATION_COLUMNS: readonly OrchestrationColumn[] = [
   },
 ] as const
 
-export const PARTNER_NAMES = [
-  'Flutter',
-  'TypeScript',
-  'Python',
-  'Firebase',
-  'Google Cloud',
-  'MongoDB',
-  'Docker',
-  'OpenAI',
-  'Supabase',
-  'Stripe',
-] as const
