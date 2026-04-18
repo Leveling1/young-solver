@@ -12,7 +12,7 @@ type ShowcaseCardProps = {
   tags: readonly string[]
   href?: string
   githubHref?: string
-  showGithubButton?: boolean
+  showGithubButton?: boolean 
 }
 
 export function ShowcaseCard({

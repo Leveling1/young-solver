@@ -27,13 +27,13 @@ export function HeroSection() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(0,123,255,0.14),transparent_22%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),transparent_20%,transparent_80%,rgba(0,0,0,0.02))]" />
 
-      <div className="container relative z-10 mx-auto px-4 py-20 lg:py-6">
+      <div className="container relative z-10 mx-auto px-6 py-20 sm:px-10 lg:px-16 lg:py-6">
         <div className="grid min-h-[80vh] grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="order-2 text-center lg:order-1 lg:text-left"
+            className="order-2 text-center lg:order-1 lg:pl-4 lg:text-left xl:pl-8"
           >
             <motion.h1
               className="mb-6 text-foreground text-3xl font-bold leading-tight sm:text-4xl md:text-5xl lg:text-6xl"
@@ -61,14 +61,14 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.6 }}
             >
-              <Button asChild size="lg" className="px-6 text-base sm:px-8 sm:text-lg">
+              <Button asChild size="lg" className="px-6 text-base sm:px-8 sm:text-lg rounded-full">
                 <ScrollLink href="#projects">
                   {t('hero.primaryAction')}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </ScrollLink>
               </Button>
 
-              <Button asChild variant="outline" size="lg" className="glass px-6 text-base sm:px-8 sm:text-lg">
+              <Button asChild variant="outline" size="lg" className="glass px-6 text-base sm:px-8 sm:text-lg rounded-full">
                 <ScrollLink href="#services">{t('hero.secondaryAction')}</ScrollLink>
               </Button>
             </motion.div>

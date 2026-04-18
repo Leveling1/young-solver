@@ -196,7 +196,7 @@ export function SiteHeader() {
               >
                 <LanguageSwitcher />
                 <ThemeSwitcher />
-                <Button asChild className="hidden sm:inline-flex">
+                <Button asChild className="hidden sm:inline-flex rounded-full">
                   <ScrollLink href="#contact">{t('nav.cta')}</ScrollLink>
                 </Button>
               </motion.div>
